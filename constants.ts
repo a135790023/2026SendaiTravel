@@ -64,7 +64,7 @@ export const ITINERARY: DaySchedule[] = [
         time: "17:40–18:10", 
         location: "仙台站", 
         activity: "移動、熟悉環境 (30分鐘)", 
-        query: "Sendai Station 仙台駅",
+        query: "Sendai Station",
         image: IMAGES.sendaiStation,
         description: "東北最大的交通樞紐，連接新幹線、JR及地鐵。車站3樓有著名的「牛舌通」與「壽司通」。",
         tips: "車站人潮眾多，請注意隨身行李。建議先在車站購買Suica或其他交通卡（若尚未持有）。"
