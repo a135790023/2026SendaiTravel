@@ -98,7 +98,7 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
       <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]" />
 
       {/* 3. Content Layer - Flex Layout for Space Distribution */}
-      <div className="relative z-10 flex flex-col h-full pt-safe-top pb-24 px-6 animate-fade-in justify-between">
+      <div className="relative z-10 flex flex-col h-full pt-safe-top pb-28 px-6 animate-fade-in justify-between">
         
         {/* Top Section: Date & Weather */}
         <div className="flex justify-between items-start mt-4 flex-shrink-0">
@@ -109,9 +109,11 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
           <WeatherWidget variant="minimal" />
         </div>
 
-        {/* Middle Section: Countdown (Centered vertically in remaining space) */}
-        <div className="flex flex-col items-center justify-center flex-1">
-          <div className="text-center text-white drop-shadow-lg transform -translate-y-4">
+        {/* Middle Section: Countdown, Travelers & Next Stop (Grouped) */}
+        <div className="flex flex-col items-center justify-center flex-1 w-full">
+          
+          {/* Countdown */}
+          <div className="text-center text-white drop-shadow-lg transform -translate-y-2 mb-6">
             <p className="text-xs font-bold uppercase tracking-[0.3em] mb-4 opacity-80">Time Until Departure</p>
             <div className="flex items-baseline justify-center space-x-4">
               <div className="flex flex-col items-center">
@@ -128,13 +130,9 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
                <span className="text-[10px] font-mono tracking-wider">2026.01.02 — 01.07</span>
             </div>
           </div>
-        </div>
 
-        {/* Bottom Section: Travelers & Next Stop (Grouped tightly at bottom) */}
-        <div className="flex flex-col w-full flex-shrink-0 space-y-4">
-          
           {/* Travelers List */}
-          <div className="w-full">
+          <div className="w-full mb-6 mt-8">
              <div className="flex items-center justify-center mb-2 opacity-70 space-x-2">
                 <div className="h-[1px] w-8 bg-white/50"></div>
                 <Users size={12} className="text-white" />
@@ -160,6 +158,12 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
              </div>
           </div>
 
+          {/* Next Stop Label (Outside Card) */}
+          <div className="w-full mt-6 mb-2 pl-1 flex items-center self-start">
+             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse mr-2 shadow-[0_0_5px_#60a5fa]"></div>
+             <span className="text-[10px] font-bold text-blue-300 uppercase tracking-[0.2em] shadow-black drop-shadow-sm">Next Stop</span>
+          </div>
+
           {/* Next Stop Glass Card */}
           <div 
             onClick={() => setTab('itinerary')}
@@ -174,15 +178,15 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
               )}
               
               <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center text-blue-100 text-[10px] font-bold tracking-wide">
-                      <Clock size={10} className="mr-1" />
-                      {nextStop.time}
-                      <span className="mx-2 opacity-50">|</span>
-                      <Calendar size={10} className="mr-1" />
-                      {nextStop.dayTitle}
+                  <div className="flex items-center mb-1">
+                    {/* Time and Title in one line with truncation */}
+                    <div className="flex items-center text-blue-100 text-[10px] font-bold tracking-wide min-w-0 flex-1 overflow-hidden">
+                      <Clock size={10} className="mr-1 flex-shrink-0" />
+                      <span className="whitespace-nowrap">{nextStop.time}</span>
+                      <span className="mx-2 opacity-50 flex-shrink-0">|</span>
+                      <Calendar size={10} className="mr-1 flex-shrink-0" />
+                      <span className="truncate whitespace-nowrap">{nextStop.dayTitle}</span>
                     </div>
-                    <span className="text-[9px] font-bold text-blue-300 uppercase tracking-widest animate-pulse">Next Stop</span>
                   </div>
                   
                   <h3 className="text-lg font-bold text-white leading-tight mb-0.5 truncate drop-shadow-sm">
