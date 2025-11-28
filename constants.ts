@@ -108,13 +108,13 @@ export const ITINERARY: DaySchedule[] = [
         query: "Ginzan Onsen 銀山温泉",
         image: IMAGES.ginzan
       },
-      { time: "18:00–19:00", location: "銀山溫泉周邊", activity: "晚餐", query: "Ginzan Onsen 銀山温泉", image: IMAGES.ginzan },
+      { time: "18:00–19:00", location: "銀山溫泉周邊", activity: "晚餐", image: IMAGES.ginzan },
       { 
         time: "20:00", 
         location: "一棟貸旅籠 治兵衛 JIHEI", 
         activity: "辦理入住", 
         // 請填入確切地址，以免導航到同名地點
-        query: "Hatago Jihei Obanazawa 一棟貸し旅籠 治兵衛", 
+        query: "一棟貸旅籠 治兵衛 JIHEI", 
         image: IMAGES.ryokan 
       },
     ]
@@ -148,7 +148,7 @@ export const ITINERARY: DaySchedule[] = [
         image: IMAGES.skiing
       },
       { time: "19:00–20:00", location: "Jupeer", activity: "歸還雪裝", query: "Zao Base Center Jupeer 蔵王ベースセンタージュピア", image: IMAGES.jupeer },
-      { time: "20:30", location: "治兵衛 JIHEI", activity: "返回住宿", query: "Hatago Jihei Obanazawa 一棟貸し旅籠 治兵衛", image: IMAGES.ryokan },
+      { time: "20:30", location: "治兵衛 JIHEI", activity: "返回住宿", query: "一棟貸旅籠 治兵衛 JIHEI", image: IMAGES.ryokan },
     ]
   },
   {
@@ -165,13 +165,13 @@ export const ITINERARY: DaySchedule[] = [
         image: IMAGES.onsen
       },
       { time: "13:30–14:30", location: "安達屋周邊", activity: "午餐", query: "Takayu Onsen 高湯温泉", image: IMAGES.onsen },
-      { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "York Benimaru Sukagawa ヨークベニマル 須賀川", image: IMAGES.house },
+      { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "ショッピングパークアスク", image: IMAGES.house },
       { 
         time: "16:30", 
         location: "須賀川包棟民宿", 
         activity: "Check-in、料理晚餐", 
         // ⚠️ 重要：私人地址請手動修正，例如："Sukagawa City Hall" 或填入確切地址
-        query: "Sukagawa City 須賀川市", 
+        query: "37.315989794096986, 140.22586626702645", 
         image: IMAGES.house 
       },
     ]
@@ -196,7 +196,7 @@ export const ITINERARY: DaySchedule[] = [
         query: "Tsuruga Castle 鶴ヶ城",
         image: IMAGES.castle
       },
-      { time: "11:30–13:00", location: "會津若松城周邊", activity: "午餐", query: "Tsuruga Castle 鶴ヶ城", image: IMAGES.castle },
+      { time: "11:30–13:00", location: "會津若松城周邊", activity: "午餐", image: IMAGES.castle },
       { 
         time: "13:30–16:30", 
         location: "大內宿", 
@@ -204,7 +204,7 @@ export const ITINERARY: DaySchedule[] = [
         query: "Ouchi-juku 大内宿",
         image: IMAGES.ouchijuku
       },
-      { time: "17:30", location: "須賀川包棟民宿", activity: "返回休息", query: "Sukagawa City 須賀川市", image: IMAGES.house },
+      { time: "17:30", location: "須賀川包棟民宿", activity: "返回休息", query: "37.315989794096986, 140.22586626702645", image: IMAGES.house },
     ]
   },
   {
