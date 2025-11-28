@@ -52,10 +52,21 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
     );
 
     const parseDate = (dateStr: string, timeStr: string) => {
-      const startTime = timeStr.split('–')[0].trim();
-      const [year, month, day] = dateStr.split('/').map(Number);
-      const [hours, minutes] = startTime.split(':').map(Number);
-      return new Date(year, month - 1, day, hours, minutes);
+      try {
+        // Robust split for time ranges: 11:50–16:00 (en-dash) or 11:50-16:00 (hyphen)
+        const startTime = timeStr.split(/[–-]/)[0].trim(); 
+        const [year, month, day] = dateStr.split('/').map(Number);
+        const [hours, minutes] = startTime.split(':').map(Number);
+        
+        // Validation check
+        if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hours) || isNaN(minutes)) {
+           return new Date(8640000000000000); // Return max date to avoid selecting invalid items
+        }
+        
+        return new Date(year, month - 1, day, hours, minutes);
+      } catch (e) {
+        return new Date(8640000000000000);
+      }
     };
 
     const upcoming = allItems.find(item => {
