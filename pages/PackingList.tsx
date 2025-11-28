@@ -30,7 +30,7 @@ const PackingList: React.FC = () => {
   }, {} as Record<string, PackingItem[]>);
 
   return (
-    <div className="pb-24 animate-fade-in bg-transparent min-h-full">
+    <div className="pb-24 animate-fade-simple bg-transparent min-h-full transform-gpu">
       {/* Sticky Glass Header */}
       <div className="bg-black/40 backdrop-blur-2xl border-b border-white/10 p-6 pt-12 pb-6 sticky top-0 z-20 shadow-2xl">
         <div className="flex items-center justify-between mb-2">
@@ -60,8 +60,8 @@ const PackingList: React.FC = () => {
                 <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2 shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
                 {category}
               </h3>
-              {/* Lighter Glass Container */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-lg">
+              {/* Stable Smoked Glass Container */}
+              <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-lg transform-gpu">
                 {categoryItems.map((item, idx) => (
                   <div 
                     key={item.id}

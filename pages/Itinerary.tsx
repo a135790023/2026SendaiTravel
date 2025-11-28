@@ -23,36 +23,38 @@ const Itinerary: React.FC = () => {
       
       {/* 1. Flight Detail Modal (Digital Boarding Pass) */}
       {selectedFlight && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-in">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-simple transform-gpu">
+          {/* Backdrop: Extremely subtle/transparent to avoid black flash */}
           <div 
-            className="absolute inset-0 bg-transparent"
+            className="absolute inset-0 bg-black/5 backdrop-blur-[2px]"
             onClick={() => setSelectedFlight(null)}
           ></div>
-          {/* UPDATED: Extremely transparent glass background */}
-          <div className="relative bg-slate-900/20 backdrop-blur-2xl border border-white/10 w-full max-w-sm rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.2)] transform transition-all scale-100 ring-1 ring-white/5">
-             <div className="h-32 bg-gradient-to-r from-yellow-600/10 to-amber-800/10 relative overflow-hidden flex items-center justify-center backdrop-blur-sm">
-                <div className="absolute inset-0 bg-white/5"></div>
-                <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
-                <h3 className="text-white text-2xl font-black tracking-widest uppercase z-10 drop-shadow-md">Boarding Pass</h3>
+          
+          {/* Modal Content: High transparency */}
+          <div className="relative bg-slate-900/10 backdrop-blur-3xl border border-white/20 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+             <div className="h-32 bg-white/5 relative overflow-hidden flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-purple-500/10"></div>
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                <h3 className="text-white/90 text-2xl font-black tracking-widest uppercase z-10 drop-shadow-md">Boarding Pass</h3>
              </div>
              <div className="px-6 py-6 relative">
                 <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-4">
                    <div>
-                     <p className="text-gray-300 text-xs font-bold uppercase tracking-wider mb-1 drop-shadow">Airline</p>
+                     <p className="text-blue-200/80 text-xs font-bold uppercase tracking-wider mb-1">Airline</p>
                      <p className="text-white font-bold text-lg drop-shadow-md">{selectedFlight.airline}</p>
                    </div>
                    <div className="text-right">
-                     <p className="text-gray-300 text-xs font-bold uppercase tracking-wider mb-1 drop-shadow">Flight No</p>
+                     <p className="text-blue-200/80 text-xs font-bold uppercase tracking-wider mb-1">Flight No</p>
                      <p className="text-yellow-400 font-mono text-2xl font-black drop-shadow-md">{selectedFlight.flightNo}</p>
                    </div>
                 </div>
                 <div className="flex justify-between items-center mb-8">
                    <div className="text-center">
                       <p className="text-4xl font-black text-white drop-shadow-lg">{selectedFlight.departure.code}</p>
-                      <p className="text-xs text-gray-300 mt-1 drop-shadow">{selectedFlight.departure.city}</p>
+                      <p className="text-xs text-gray-300 mt-1">{selectedFlight.departure.city}</p>
                    </div>
                    <div className="flex-1 px-4 flex flex-col items-center">
-                      <div className="flex items-center text-gray-300 text-xs mb-1 font-mono drop-shadow">{selectedFlight.duration}</div>
+                      <div className="flex items-center text-gray-300 text-xs mb-1 font-mono">{selectedFlight.duration}</div>
                       <div className="w-full h-0.5 bg-white/30 relative flex items-center justify-center">
                          <div className="w-2 h-2 bg-white rounded-full absolute left-0 shadow-[0_0_5px_white]"></div>
                          <div className="w-2 h-2 bg-white rounded-full absolute right-0 shadow-[0_0_5px_white]"></div>
@@ -61,23 +63,23 @@ const Itinerary: React.FC = () => {
                    </div>
                    <div className="text-center">
                       <p className="text-4xl font-black text-white drop-shadow-lg">{selectedFlight.arrival.code}</p>
-                      <p className="text-xs text-gray-300 mt-1 drop-shadow">{selectedFlight.arrival.city}</p>
+                      <p className="text-xs text-gray-300 mt-1">{selectedFlight.arrival.city}</p>
                    </div>
                 </div>
-                <div className="grid grid-cols-2 gap-y-6 gap-x-4 bg-transparent rounded-xl p-4 border border-white/10 backdrop-blur-sm">
+                <div className="grid grid-cols-2 gap-y-6 gap-x-4 bg-transparent rounded-xl p-4 border border-white/10">
                    <div>
-                      <div className="flex items-center space-x-1 text-xs text-gray-300 font-bold uppercase mb-1 drop-shadow">
+                      <div className="flex items-center space-x-1 text-xs text-gray-400 font-bold uppercase mb-1">
                         <PlaneTakeoff size={12} /> <span>Departs</span>
                       </div>
-                      <p className="text-xl font-bold text-white drop-shadow-md">{selectedFlight.departure.time}</p>
-                      <p className="text-xs text-blue-200 mt-0.5 drop-shadow">Terminal {selectedFlight.departure.terminal}</p>
+                      <p className="text-xl font-bold text-white">{selectedFlight.departure.time}</p>
+                      <p className="text-xs text-blue-200 mt-0.5">Terminal {selectedFlight.departure.terminal}</p>
                    </div>
                    <div>
-                      <div className="flex items-center space-x-1 text-xs text-gray-300 font-bold uppercase mb-1 drop-shadow">
+                      <div className="flex items-center space-x-1 text-xs text-gray-400 font-bold uppercase mb-1">
                         <PlaneLanding size={12} /> <span>Arrives</span>
                       </div>
-                      <p className="text-xl font-bold text-white drop-shadow-md">{selectedFlight.arrival.time}</p>
-                      <p className="text-xs text-blue-200 mt-0.5 drop-shadow">Terminal {selectedFlight.arrival.terminal}</p>
+                      <p className="text-xl font-bold text-white">{selectedFlight.arrival.time}</p>
+                      <p className="text-xs text-blue-200 mt-0.5">Terminal {selectedFlight.arrival.terminal}</p>
                    </div>
                 </div>
                 <button 
@@ -91,31 +93,31 @@ const Itinerary: React.FC = () => {
         </div>
       )}
 
-      {/* 2. Place Detail Modal (Premium Extremely Transparent Glass) */}
+      {/* 2. Place Detail Modal (Premium Ultra-Transparent Glass) */}
       {selectedPlace && !selectedPlace.flight && (
-         <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center sm:p-4 animate-fade-in">
-           {/* Backdrop - Transparent to avoid flash */}
+         <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center sm:p-4 animate-fade-simple transform-gpu">
+           {/* Backdrop: Minimal opacity (5%) to prevent dark flash */}
            <div 
-             className="absolute inset-0 bg-transparent transition-opacity"
+             className="absolute inset-0 bg-black/5 backdrop-blur-[2px] transition-opacity"
              onClick={() => setSelectedPlace(null)}
            ></div>
 
-           {/* Modal Card - UPDATED: Ultra Transparent "Thin Ice" Look (slate-900/10) */}
-           <div className="relative w-full max-w-md bg-slate-900/10 backdrop-blur-2xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.2)] border-t sm:border border-white/10 max-h-[90vh] overflow-y-auto no-scrollbar ring-1 ring-white/5">
+           {/* Modal Card: Very High Transparency (slate-900/10) to look like thin ice */}
+           <div className="relative w-full max-w-md bg-slate-900/10 backdrop-blur-3xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border-t sm:border border-white/20 max-h-[90vh] overflow-y-auto no-scrollbar ring-1 ring-white/10">
              
-             {/* Header Image */}
-             <div className="relative h-72 w-full flex-shrink-0">
+             {/* Header Image - Fixed Height, No Zoom */}
+             <div className="relative h-72 w-full flex-shrink-0 bg-slate-900/20">
                <img 
                  src={selectedPlace.image} 
                  alt={selectedPlace.location} 
-                 className="w-full h-full object-cover"
+                 className="w-full h-full object-cover opacity-95"
                />
-               {/* Gradient overlay - lighter */}
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+               {/* Gradient overlay */}
+               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
                
                <button 
                   onClick={() => setSelectedPlace(null)}
-                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all z-20 shadow-lg active:scale-90"
+                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-transparent border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all z-20 shadow-lg active:scale-90"
                 >
                   <X size={20} />
                </button>
@@ -141,12 +143,12 @@ const Itinerary: React.FC = () => {
 
                 {/* Operating Hours - Pure Transparent */}
                 {selectedPlace.openingHours && (
-                  <div className="flex items-start space-x-4 bg-transparent rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-colors">
-                     <div className="bg-blue-500/10 p-2.5 rounded-full ring-1 ring-blue-400/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
-                       <Clock className="text-blue-200" size={20} />
+                  <div className="flex items-start space-x-4 bg-transparent rounded-2xl p-4 border border-white/10">
+                     <div className="p-2 rounded-full border border-blue-400/30 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+                       <Clock className="text-blue-300" size={18} />
                      </div>
                      <div>
-                        <h4 className="text-white text-sm font-bold mb-1 tracking-wide drop-shadow">營業時間</h4>
+                        <h4 className="text-white/90 text-sm font-bold mb-0.5 tracking-wide drop-shadow">營業時間</h4>
                         <p className="text-gray-200 text-sm font-mono drop-shadow-sm">{selectedPlace.openingHours}</p>
                      </div>
                   </div>
@@ -154,22 +156,22 @@ const Itinerary: React.FC = () => {
 
                 {/* Tips - Pure Transparent */}
                 {selectedPlace.tips && (
-                  <div className="flex items-start space-x-4 bg-transparent rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-colors">
-                     <div className="bg-yellow-500/10 p-2.5 rounded-full ring-1 ring-yellow-400/20 shadow-[0_0_10px_rgba(234,179,8,0.1)]">
-                        <Lightbulb className="text-yellow-200" size={20} />
+                  <div className="flex items-start space-x-4 bg-transparent rounded-2xl p-4 border border-white/10">
+                     <div className="p-2 rounded-full border border-yellow-400/30 shadow-[0_0_10px_rgba(234,179,8,0.1)]">
+                        <Lightbulb className="text-yellow-300" size={18} />
                      </div>
                      <div>
-                        <h4 className="text-yellow-100 text-sm font-bold mb-1 tracking-wide drop-shadow">貼心提醒</h4>
+                        <h4 className="text-white/90 text-sm font-bold mb-0.5 tracking-wide drop-shadow">貼心提醒</h4>
                         <p className="text-gray-200 text-sm leading-relaxed drop-shadow-sm">{selectedPlace.tips}</p>
                      </div>
                   </div>
                 )}
 
-                {/* Navigation Button - Pure Transparent (No background) */}
+                {/* Navigation Button - Pure Transparent (Ghost Style) */}
                 {selectedPlace.query && (
                   <button 
                     onClick={() => handleOpenMap(selectedPlace.query!)}
-                    className="w-full bg-transparent hover:bg-white/5 text-white font-bold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 transition-all active:scale-[0.98] border border-white/20 backdrop-blur-none group"
+                    className="w-full bg-transparent hover:bg-white/5 text-white font-bold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 transition-all active:scale-[0.98] border border-white/20 backdrop-blur-sm group shadow-[0_0_15px_rgba(0,0,0,0.1)]"
                   >
                     <Navigation size={18} className="text-blue-300 group-hover:text-blue-200 animate-pulse" />
                     <span className="tracking-widest text-sm drop-shadow-md">開啟導航</span>
@@ -201,7 +203,7 @@ const Itinerary: React.FC = () => {
               className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap border ${
                 activeDay === index
                   ? 'bg-blue-600/40 border-blue-400 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]'
-                  : 'bg-white/10 border-white/5 text-gray-400 hover:bg-white/20 hover:text-white'
+                  : 'bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
               }`}
             >
               Day {index + 1}
@@ -210,7 +212,7 @@ const Itinerary: React.FC = () => {
         </div>
 
         {/* Active Day Title */}
-        <div className="animate-fade-in mt-4 pl-1">
+        <div className="animate-fade-simple mt-4 pl-1">
            <h3 className="text-xl font-black text-white tracking-tight drop-shadow-md">{ITINERARY[activeDay].title}</h3>
            <p className="text-gray-300 text-xs font-medium uppercase tracking-wider mt-1">
             {ITINERARY[activeDay].date} · {ITINERARY[activeDay].dayOfWeek}
@@ -224,7 +226,7 @@ const Itinerary: React.FC = () => {
         <div className="absolute left-[27px] top-[210px] bottom-6 w-0.5 bg-gradient-to-b from-blue-500/50 via-gray-600/30 to-transparent z-0"></div>
 
         {ITINERARY[activeDay].items.map((item, idx) => (
-          <div key={idx} className="relative group animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }}>
+          <div key={idx} className="relative group animate-fade-simple" style={{ animationDelay: `${idx * 50}ms` }}>
             <div className="flex items-start z-10 relative">
               
               {/* Timeline Node */}
@@ -249,7 +251,7 @@ const Itinerary: React.FC = () => {
                     
                     {/* Visual Header (Image) */}
                     {item.image ? (
-                      <div className="h-40 w-full relative group-hover:scale-[1.02] transition-transform duration-700 ease-out">
+                      <div className="h-40 w-full relative group-hover:opacity-100 transition-all duration-500 ease-out">
                          <img src={item.image} alt={item.location} className="w-full h-full object-cover opacity-90" />
                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
                          

@@ -75,7 +75,7 @@ const Tools: React.FC = () => {
   };
 
   return (
-    <div className="pb-24 animate-fade-in min-h-full bg-transparent">
+    <div className="pb-24 animate-fade-simple min-h-full bg-transparent transform-gpu">
       {/* Header */}
       <div className="bg-black/40 backdrop-blur-2xl border-b border-white/10 p-6 pt-12 pb-6 sticky top-0 z-20">
         <div className="flex items-center justify-between mb-2">
@@ -87,8 +87,8 @@ const Tools: React.FC = () => {
 
       <div className="p-5 space-y-6">
         
-        {/* Currency Converter Card */}
-        <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-xl border border-white/10 p-6 relative overflow-hidden group">
+        {/* Currency Converter Card - Stable Smoked Glass */}
+        <div className="bg-slate-900/20 backdrop-blur-xl rounded-3xl shadow-xl border border-white/10 p-6 relative overflow-hidden group transform-gpu">
           {/* Decorative Glow */}
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-colors duration-700"></div>
           
@@ -183,24 +183,25 @@ const Tools: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Tips Card */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-          <Snowflake className="absolute top-4 right-4 text-white/5 w-24 h-24 animate-spin-slow" />
-          <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
-             <Snowflake size={18} className="mr-2" />
-             冬季購物小提醒
+        {/* Quick Tips Card - Light Theme (Solid Background) */}
+        <div className="bg-slate-100/95 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
+          
+          <Snowflake className="absolute top-4 right-4 text-blue-200/50 w-24 h-24 animate-spin-slow" />
+          <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-800">
+             <Snowflake size={18} className="mr-2 text-blue-500" />
+             旅遊小提醒
           </h3>
-          <ul className="space-y-3 text-sm text-gray-200 relative z-10">
+          <ul className="space-y-3 text-sm text-slate-700 relative z-10 font-medium">
             <li className="flex items-start">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,1)]"></span>
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-sm"></span>
               滿 5,500 日圓可退稅 (10%)。
             </li>
             <li className="flex items-start">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,1)]"></span>
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-sm"></span>
               刷卡建議選擇「日幣」結帳較划算。
             </li>
             <li className="flex items-start">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,1)]"></span>
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-sm"></span>
               大家滑雪要小心，雪場遠離蘇進吉，他撞到不負責。
             </li>
           </ul>
