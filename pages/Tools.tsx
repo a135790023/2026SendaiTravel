@@ -1,20 +1,45 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ArrowRightLeft } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2 } from 'lucide-react';
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
   const [twd, setTwd] = useState<string>('');
-  const [rate, setRate] = useState<number>(0.22); // Default estimate
+  const [rate, setRate] = useState<number>(0.215); // Default fallback
+  const [isLoadingRate, setIsLoadingRate] = useState(false);
   const [lastEdited, setLastEdited] = useState<'jpy' | 'twd'>('jpy');
 
+  // Fetch Live Rate on Mount
   useEffect(() => {
-    // Load saved rate if available
-    const savedRate = localStorage.getItem('sendai_exchange_rate');
-    if (savedRate) {
-      setRate(parseFloat(savedRate));
-    }
+    fetchLiveRate();
   }, []);
+
+  const fetchLiveRate = async () => {
+    setIsLoadingRate(true);
+    try {
+      // Using a free, reliable standard API for JPY base rates
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
+      const data = await response.json();
+      const marketRate = data.rates.TWD;
+      
+      // Market rate usually differs slightly from Bank selling rate. 
+      // We use it as a good baseline.
+      if (marketRate) {
+        setRate(marketRate);
+        localStorage.setItem('sendai_exchange_rate', marketRate.toString());
+        // Recalculate if values exist
+        if (jpy) {
+           setTwd((parseFloat(jpy) * marketRate).toFixed(0));
+        }
+      }
+    } catch (error) {
+      console.error("Rate fetch failed, using saved or default");
+      const saved = localStorage.getItem('sendai_exchange_rate');
+      if (saved) setRate(parseFloat(saved));
+    } finally {
+      setIsLoadingRate(false);
+    }
+  };
 
   const handleRateChange = (newRate: string) => {
     const r = parseFloat(newRate);
@@ -51,6 +76,7 @@ const Tools: React.FC = () => {
 
   return (
     <div className="pb-24 animate-fade-in min-h-full bg-transparent">
+      {/* Header */}
       <div className="bg-black/40 backdrop-blur-2xl border-b border-white/10 p-6 pt-12 pb-6 sticky top-0 z-20">
         <div className="flex items-center justify-between mb-2">
            <h2 className="text-2xl font-bold text-white tracking-tight drop-shadow-md">實用工具</h2>
@@ -61,22 +87,31 @@ const Tools: React.FC = () => {
 
       <div className="p-5 space-y-6">
         
-        {/* Currency Converter Card - Lighter Glass */}
+        {/* Currency Converter Card */}
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-xl border border-white/10 p-6 relative overflow-hidden group">
           {/* Decorative Glow */}
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-colors duration-700"></div>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500"></div>
-
-          <div className="flex items-center space-x-2 mb-6 text-white relative z-10">
-            <RefreshCw size={18} className="text-blue-400" />
-            <h3 className="font-bold text-lg">匯率計算機</h3>
+          
+          <div className="flex items-center justify-between mb-6 text-white relative z-10">
+            <div className="flex items-center space-x-2">
+              <RefreshCw size={18} className="text-blue-400" />
+              <h3 className="font-bold text-lg">匯率計算機</h3>
+            </div>
+            <button 
+              onClick={fetchLiveRate}
+              className="p-2 rounded-full hover:bg-white/10 active:scale-95 transition-all text-blue-300"
+              title="更新匯率"
+            >
+              {isLoadingRate ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
+            </button>
           </div>
 
-          <div className="space-y-6 relative z-10">
+          <div className="space-y-4 relative z-10">
             {/* JPY Input */}
             <div>
-              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-                日幣 (JPY)
+              <label className="block text-xs font-bold text-blue-200 mb-2 uppercase tracking-wider flex justify-between">
+                <span>日幣 (JPY)</span>
+                <span className="text-white/50">購物金額</span>
               </label>
               <div className="relative">
                 <input
@@ -93,17 +128,14 @@ const Tools: React.FC = () => {
               </div>
             </div>
 
-            {/* Swap Icon */}
-            <div className="flex justify-center -my-2">
-              <div className="bg-white/10 p-1.5 rounded-full border border-white/10 text-gray-300 backdrop-blur-md">
-                <ArrowRightLeft className="rotate-90" size={16} />
-              </div>
-            </div>
+            {/* Separator Line (No Swap Button) */}
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-2"></div>
 
             {/* TWD Input */}
             <div>
-              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-                台幣 (TWD)
+              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider flex justify-between">
+                <span>台幣 (TWD)</span>
+                <span className="text-white/50">約合台幣</span>
               </label>
               <div className="relative">
                 <input
@@ -120,25 +152,39 @@ const Tools: React.FC = () => {
               </div>
             </div>
 
-            {/* Rate Setting */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs text-gray-400">目前匯率 (1 JPY = ? TWD)</span>
-              <div className="flex items-center bg-black/30 rounded-lg px-3 py-1 border border-white/10">
-                 <span className="text-xs text-gray-400 mr-2">Rate:</span>
-                 <input 
-                    type="number" 
-                    value={rate}
-                    onChange={(e) => handleRateChange(e.target.value)}
-                    className="w-16 bg-transparent text-right text-sm font-bold text-blue-400 outline-none"
-                    step="0.001"
-                 />
+            {/* Rate Setting & BOT Link */}
+            <div className="pt-4 mt-2 flex flex-col space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                   <span className="text-xs text-gray-400">計算匯率:</span>
+                   <input 
+                      type="number" 
+                      value={rate}
+                      onChange={(e) => handleRateChange(e.target.value)}
+                      className="w-16 bg-black/20 border border-white/10 rounded px-2 py-1 text-right text-sm font-bold text-blue-400 outline-none focus:border-blue-500"
+                      step="0.001"
+                   />
+                </div>
+                <span className="text-[10px] text-gray-500">
+                  {isLoadingRate ? '更新中...' : '即時匯率自動更新'}
+                </span>
               </div>
+
+              <a 
+                href="https://rate.bot.com.tw/xrt?Lang=zh-TW" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center space-x-2 w-full py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-xs text-gray-300"
+              >
+                <span>查看台灣銀行牌告匯率</span>
+                <ExternalLink size={12} />
+              </a>
             </div>
           </div>
         </div>
 
         {/* Quick Tips Card */}
-        <div className="bg-gradient-to-br from-blue-900/60 to-slate-900/80 backdrop-blur-xl border border-blue-400/20 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
           <Snowflake className="absolute top-4 right-4 text-white/5 w-24 h-24 animate-spin-slow" />
           <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
              <Snowflake size={18} className="mr-2" />
