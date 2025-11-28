@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Cloud, Sun, Snowflake, CloudRain, MapPin, Loader2 } from 'lucide-react';
 import { WeatherData } from '../types';
@@ -68,13 +69,14 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ variant = 'default' }) =>
   }, []);
 
   const getWeatherIcon = (code: number) => {
-    const iconClass = variant === 'minimal' ? "w-6 h-6 text-white drop-shadow-md" : "w-8 h-8";
+    // In minimal mode (dark bg), icons are white. In default mode (glass card), we keep them colored but lighter for dark theme
+    const iconClass = variant === 'minimal' ? "w-6 h-6 text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]" : "w-8 h-8";
     
-    if (code <= 1) return <Sun className={`${iconClass} ${variant === 'default' ? 'text-yellow-400' : ''}`} />;
-    if (code <= 3) return <Cloud className={`${iconClass} ${variant === 'default' ? 'text-gray-400' : ''}`} />;
-    if (code <= 67) return <CloudRain className={`${iconClass} ${variant === 'default' ? 'text-blue-400' : ''}`} />;
+    if (code <= 1) return <Sun className={`${iconClass} ${variant === 'default' ? 'text-yellow-300' : ''}`} />;
+    if (code <= 3) return <Cloud className={`${iconClass} ${variant === 'default' ? 'text-gray-300' : ''}`} />;
+    if (code <= 67) return <CloudRain className={`${iconClass} ${variant === 'default' ? 'text-blue-300' : ''}`} />;
     if (code >= 71) return <Snowflake className={`${iconClass} ${variant === 'default' ? 'text-cyan-200' : ''}`} />;
-    return <Cloud className={`${iconClass} ${variant === 'default' ? 'text-gray-400' : ''}`} />;
+    return <Cloud className={`${iconClass} ${variant === 'default' ? 'text-gray-300' : ''}`} />;
   };
 
   if (error) return null;
@@ -88,7 +90,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ variant = 'default' }) =>
             {loading ? '--' : weather?.temperature}°
           </span>
         </div>
-        <div className="flex items-center text-[10px] font-medium opacity-90 drop-shadow-sm mt-0.5">
+        <div className="flex items-center text-[10px] font-medium opacity-80 mt-0.5">
           <MapPin className="w-3 h-3 mr-0.5" />
           {locationName}
         </div>
@@ -96,23 +98,23 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ variant = 'default' }) =>
     );
   }
 
-  // Default Card Style
+  // Default Card Style (Dark Mode Glass)
   return (
-    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-white/50 flex items-center justify-between">
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white/10 flex items-center justify-between">
       <div>
-        <div className="flex items-center text-xs text-gray-500 mb-1">
+        <div className="flex items-center text-xs text-gray-400 mb-1">
           <MapPin className="w-3 h-3 mr-1" />
           {locationName}
         </div>
         {loading ? (
           <div className="flex items-center space-x-2">
-            <Loader2 className="w-5 h-5 animate-spin text-ios-blue" />
+            <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
             <span className="text-sm text-gray-400">載入天氣...</span>
           </div>
         ) : (
-          <div className="flex items-baseline">
-             <span className="text-3xl font-light tracking-tighter text-gray-800">
-               {weather?.temperature}<span className="text-lg">°C</span>
+          <div className="flex items-baseline text-white">
+             <span className="text-3xl font-light tracking-tighter">
+               {weather?.temperature}<span className="text-lg text-gray-400">°C</span>
              </span>
           </div>
         )}
@@ -120,7 +122,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ variant = 'default' }) =>
       <div className="flex flex-col items-center">
         {!loading && weather && getWeatherIcon(weather.weatherCode)}
         {!loading && weather && (
-           <span className="text-xs text-gray-500 mt-1">
+           <span className="text-xs text-gray-400 mt-1">
              {weather.weatherCode >= 71 ? "下雪" : weather.weatherCode > 3 ? "有雨" : "晴時多雲"}
            </span>
         )}
