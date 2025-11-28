@@ -24,14 +24,14 @@ const Itinerary: React.FC = () => {
       {/* 1. Flight Detail Modal (Digital Boarding Pass) */}
       {selectedFlight && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-simple transform-gpu">
-          {/* Backdrop: Extremely subtle/transparent to avoid black flash */}
+          {/* Backdrop: Subtle dark overlay for focus */}
           <div 
-            className="absolute inset-0 bg-black/5 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
             onClick={() => setSelectedFlight(null)}
           ></div>
           
-          {/* Modal Content: High transparency */}
-          <div className="relative bg-slate-900/10 backdrop-blur-3xl border border-white/20 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+          {/* Modal Content: Increased opacity for better glass effect on iOS */}
+          <div className="relative bg-slate-900/60 backdrop-blur-xl border border-white/20 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
              <div className="h-32 bg-white/5 relative overflow-hidden flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-purple-500/10"></div>
                 <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
@@ -93,37 +93,37 @@ const Itinerary: React.FC = () => {
         </div>
       )}
 
-      {/* 2. Place Detail Modal (Premium Ultra-Transparent Glass) */}
+      {/* 2. Place Detail Modal (Premium Glass - Increased Opacity for Visibility) */}
       {selectedPlace && !selectedPlace.flight && (
          <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center sm:p-4 animate-fade-simple transform-gpu">
-           {/* Backdrop: Minimal opacity (5%) to prevent dark flash */}
+           {/* Backdrop */}
            <div 
-             className="absolute inset-0 bg-black/5 backdrop-blur-[2px] transition-opacity"
+             className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity"
              onClick={() => setSelectedPlace(null)}
            ></div>
 
-           {/* Modal Card: Very High Transparency (slate-900/10) to look like thin ice */}
-           <div className="relative w-full max-w-md bg-slate-900/10 backdrop-blur-3xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border-t sm:border border-white/20 max-h-[90vh] overflow-y-auto no-scrollbar ring-1 ring-white/10">
+           {/* Modal Card: Increased opacity to slate-900/60 to ensure blur renders on iOS */}
+           <div className="relative w-full max-w-md bg-slate-900/60 backdrop-blur-xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border-t sm:border border-white/20 max-h-[90vh] overflow-y-auto no-scrollbar ring-1 ring-white/10">
              
-             {/* Header Image - Fixed Height, No Zoom */}
-             <div className="relative h-72 w-full flex-shrink-0 bg-slate-900/20">
+             {/* Header Image */}
+             <div className="relative h-72 w-full flex-shrink-0 bg-slate-900">
                <img 
                  src={selectedPlace.image} 
                  alt={selectedPlace.location} 
                  className="w-full h-full object-cover opacity-95"
                />
                {/* Gradient overlay */}
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
+               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
                
                <button 
                   onClick={() => setSelectedPlace(null)}
-                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-transparent border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all z-20 shadow-lg active:scale-90"
+                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all z-20 shadow-lg active:scale-90"
                 >
                   <X size={20} />
                </button>
 
                <div className="absolute bottom-0 left-0 right-0 p-6 pt-12">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-xs font-mono text-blue-50 mb-3 shadow-lg">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-xs font-mono text-blue-50 mb-3 shadow-lg">
                      <Clock size={12} className="mr-1.5" />
                      {selectedPlace.time}
                   </div>
@@ -141,7 +141,7 @@ const Itinerary: React.FC = () => {
                    </p>
                 </div>
 
-                {/* Operating Hours - Pure Transparent */}
+                {/* Operating Hours */}
                 {selectedPlace.openingHours && (
                   <div className="flex items-start space-x-4 bg-transparent rounded-2xl p-4 border border-white/10">
                      <div className="p-2 rounded-full border border-blue-400/30 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
@@ -154,7 +154,7 @@ const Itinerary: React.FC = () => {
                   </div>
                 )}
 
-                {/* Tips - Pure Transparent */}
+                {/* Tips */}
                 {selectedPlace.tips && (
                   <div className="flex items-start space-x-4 bg-transparent rounded-2xl p-4 border border-white/10">
                      <div className="p-2 rounded-full border border-yellow-400/30 shadow-[0_0_10px_rgba(234,179,8,0.1)]">
@@ -167,7 +167,7 @@ const Itinerary: React.FC = () => {
                   </div>
                 )}
 
-                {/* Navigation Button - Pure Transparent (Ghost Style) */}
+                {/* Navigation Button */}
                 {selectedPlace.query && (
                   <button 
                     onClick={() => handleOpenMap(selectedPlace.query!)}
@@ -220,7 +220,7 @@ const Itinerary: React.FC = () => {
         </div>
       </div>
 
-      {/* Timeline Content - Added Top Padding for Fixed Header */}
+      {/* Timeline Content */}
       <div className="relative px-4 pb-6 space-y-8 z-10 pt-[190px]">
         {/* Vertical Line */}
         <div className="absolute left-[27px] top-[210px] bottom-6 w-0.5 bg-gradient-to-b from-blue-500/50 via-gray-600/30 to-transparent z-0"></div>
@@ -246,7 +246,7 @@ const Itinerary: React.FC = () => {
                  }}
               >
                  
-                 {/* Card Container - LIGHTER GLASS HERE */}
+                 {/* Card Container */}
                  <div className={`bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-lg hover:bg-white/15 transition-all duration-300 ${!item.isTransport || item.flight ? 'cursor-pointer hover:border-blue-400/40 hover:shadow-blue-900/20' : ''}`}>
                     
                     {/* Visual Header (Image) */}
@@ -255,13 +255,13 @@ const Itinerary: React.FC = () => {
                          <img src={item.image} alt={item.location} className="w-full h-full object-cover opacity-90" />
                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
                          
-                         {/* TIME BADGE - Top Left */}
+                         {/* TIME BADGE */}
                          <div className="absolute top-0 left-0 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-br-xl border-r border-b border-white/10 flex items-center shadow-lg">
                             <Clock size={10} className="text-blue-300 mr-1.5" />
                             <span className="text-xs font-bold text-white tracking-wide font-mono">{item.time}</span>
                          </div>
 
-                         {/* Navigation Button - Top Right Floating */}
+                         {/* Navigation Button */}
                          {!item.isTransport && item.query && (
                            <button
                              onClick={(e) => {

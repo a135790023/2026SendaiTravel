@@ -128,7 +128,7 @@ const Tools: React.FC = () => {
               </div>
             </div>
 
-            {/* Separator Line (No Swap Button) */}
+            {/* Separator Line */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-2"></div>
 
             {/* TWD Input */}
@@ -183,25 +183,25 @@ const Tools: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Tips Card - Light Theme (Solid Background) */}
-        <div className="bg-slate-100/95 backdrop-blur-sm border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
+        {/* Quick Tips Card - Transparent Glass Style */}
+        <div className="bg-slate-900/40 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
           
-          <Snowflake className="absolute top-4 right-4 text-blue-200/50 w-24 h-24 animate-spin-slow" />
-          <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-800">
-             <Snowflake size={18} className="mr-2 text-blue-500" />
+          <Snowflake className="absolute top-4 right-4 text-blue-400/10 w-24 h-24 animate-spin-slow" />
+          <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
+             <Snowflake size={18} className="mr-2 text-blue-400" />
              旅遊小提醒
           </h3>
-          <ul className="space-y-3 text-sm text-slate-700 relative z-10 font-medium">
+          <ul className="space-y-3 text-sm text-gray-200 relative z-10 font-medium">
             <li className="flex items-start">
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-sm"></span>
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
               滿 5,500 日圓可退稅 (10%)。
             </li>
             <li className="flex items-start">
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-sm"></span>
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
               刷卡建議選擇「日幣」結帳較划算。
             </li>
             <li className="flex items-start">
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-sm"></span>
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
               大家滑雪要小心，雪場遠離蘇進吉，他撞到不負責。
             </li>
           </ul>
