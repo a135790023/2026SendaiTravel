@@ -8,7 +8,7 @@ const IMAGES = {
   plane: "https://icrvb3jy.xinmedia.com/solomo/article/b/5/1/b5194e1b-c5db-4b5b-964a-83a4d3b0d50e.jpeg",
   airport: "https://www.tabirai.net/tabirai-uploader/img/0005493/s8_0005493.jpg",
   sendaiStation: "https://s-style.machico.mu/wp-content/uploads/2023/10/S__86155302_0.jpg",
-  gyutan: "https://matipura.com/CORE/wp-content/uploads/2017/03/02-5.jpg",
+  gyutan: "https://i.imgur.com/0RNoOeh.jpg",
   hotel: "https://www.washingtonhotel.co.jp/rb/_data/cache/images/2025/05/28/1300_578_71c971338d420790ace53b39fe7af95bbee2e953.webp",
   driving: "https://image.card.tw.r10s.com/images/corp/campaign/1400/Toyota_04.jpg", // Snowy road
   yamadera: "https://www.visityamagata.jp/wp/wp-content/uploads/2024/07/%E4%BA%94%E5%A4%A7%E5%A0%821.jpg.webp",
@@ -66,17 +66,17 @@ export const ITINERARY: DaySchedule[] = [
         activity: "移動、熟悉環境 (30分鐘)", 
         query: "Sendai Station",
         image: IMAGES.sendaiStation,
-        description: "東北最大的交通樞紐，連接新幹線、JR及地鐵。車站3樓有著名的「牛舌通」與「壽司通」。",
-        tips: "車站人潮眾多，請注意隨身行李。建議先在車站購買Suica或其他交通卡（若尚未持有）。"
+        description: "東北最大的交通樞紐，連接新幹線、JR及地鐵。",
+        tips: "先回飯店放行李，再去吃晚餐。"
       },
       { 
         time: "18:15–19:15", 
-        location: "牛タン焼専門店 東口", 
+        location: "たんや善治郎 五橋横丁別館", 
         activity: "晚餐：享用仙台牛舌", 
-        query: "Sendai Station East Exit Gyutan 仙台駅東口 牛タン",
+        query: "たんや善治郎 五橋横丁別館",
         image: IMAGES.gyutan,
         description: "仙台最著名的美食「厚切牛舌」。炭火燒烤的牛舌口感Q彈脆口，搭配麥飯與牛尾湯是經典套餐。",
-        tips: "熱門店家通常需要排隊，建議避開尖峰時段或提前預約。"
+        tips: "這間距離住宿位置走路約7分鐘。"
       },
       { 
         time: "21:00", 
@@ -85,7 +85,7 @@ export const ITINERARY: DaySchedule[] = [
         query: "R&B Hotel Sendai Higashiguchi R&Bホテル仙台東口",
         image: IMAGES.hotel,
         description: "位於仙台站東口步行可達的商務飯店，交通便利，周邊有超商。",
-        tips: "請備妥所有人的護照以供影印。早餐通常為簡單的麵包與湯品。"
+        tips: "請備妥所有人的護照以供影印。隔天早餐可以先去超商買好。"
       },
     ]
   },
@@ -112,7 +112,7 @@ export const ITINERARY: DaySchedule[] = [
         image: IMAGES.yamadera,
         description: "松尾芭蕉曾造訪的名剎，需攀登1015階石階才能到達奧之院。冬季雪景如水墨畫般絕美，從五大堂眺望山谷是經典視角。",
         openingHours: "08:00 - 17:00",
-        tips: "階梯積雪非常滑，強烈建議穿著防滑釘鞋或購買簡易冰爪。爬山約需40-60分鐘。"
+        tips: "階梯積雪非常滑，鞋子自己要多注意。爬山約需30分鐘。"
       },
       { time: "12:00–14:30", location: "山寺周邊", activity: "午餐、周邊散策", query: "Yamadera Station 山寺駅", image: IMAGES.yamadera },
       { 
@@ -188,7 +188,7 @@ export const ITINERARY: DaySchedule[] = [
         query: "Takayu Onsen Adachiya 高湯温泉 安達屋",
         image: IMAGES.onsen,
         description: "位於標高750公尺的高湯溫泉，以混浴露天溫泉「大氣之湯」聞名。乳白色的硫磺泉質極佳，被譽為「藥湯」。",
-        openingHours: "日歸溫泉 10:00 - 13:00 (需確認)",
+        openingHours: "日歸溫泉 10:30 ～ 14:30（13:00最終受付） ",
         tips: "混浴區域可圍浴巾入浴。請勿在溫泉內使用手機拍照。刺青者可能無法進入公共池，請先確認。"
       },
       { time: "13:30–14:30", location: "安達屋周邊", activity: "午餐", query: "Takayu Onsen 高湯温泉", image: IMAGES.onsen },
@@ -217,7 +217,7 @@ export const ITINERARY: DaySchedule[] = [
         query: "No.1 Tadami River Bridge Viewpoint 第一只見川橋梁ビューポイント",
         image: IMAGES.tadami,
         description: "鐵道迷必訪聖地。可拍攝列車行經鐵橋倒映在川面上的夢幻絕景。冬季雪景更是經典。",
-        tips: "需攀登步道至展望台。早上列車通過約：09:03 (往會津)、09:17 (往小出)。"
+        tips: "需攀登步道至展望台。早上列車通過約：09:01 (往會津)、09:20 (往小出)。"
       },
       { 
         time: "10:30–11:30", 
@@ -316,5 +316,5 @@ export const WINTER_PACKING_LIST: PackingItem[] = [
   { id: '18', category: '電子', text: '行動電源', completed: false },
   { id: '19', category: '電子', text: '充電線 & 插頭 (日本電壓 100V)', completed: false },
   { id: '20', category: '其他', text: '常備藥品 (感冒/腸胃/止痛)', completed: false },
-  { id: '21', category: '其他', text: '鞋用止滑墊 (簡易冰爪)', completed: false },
+  { id: '21', category: '其他', text: '一顆期待的心', completed: false },
 ];
