@@ -16,7 +16,7 @@ const IMAGES = {
   ryokan: "https://a0.muscache.com/im/pictures/hosting/Hosting-1287479416884768737/original/e2416226-99a4-4fd2-8bf8-95efb76d825f.jpeg?im_w=960", // Placeholder for Jihei
   snowMonsters: "https://i0.wp.com/journey.tw/wp-content/uploads/2023-10-17-191105-95.jpg?resize=1100%2C734&quality=99&ssl=1",
   skiing: "https://www.sundaytour.com.tw/upfiles/chinese/attractions/tw_attractions_caty01689064716.jpg",
-  jupeer: "https://instagram.fkhh1-1.fna.fbcdn.net/v/t39.30808-6/470584014_10235656484257152_1544646902909205017_n.jpg?stp=cp6_dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InRocmVhZHMuQ0FST1VTRUxfSVRFTS5pbWFnZV91cmxnZW4uMjA0OHgxNTM2LnNkci5mMzA4MDguZGVmYXVsdF9pbWFnZS5jMiJ9&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=100&_nc_oc=Q6cZ2QEBAUz4cWLus-tLJ-XQPMrRNRmXm2bfuPqL-q0QrLsbhniM5g1eVFZUWt7vAcIuw4Q&_nc_ohc=FN0mTlDewpsQ7kNvwGJFnvu&_nc_gid=LLKbQShaLXOA8BCrM6TuIQ&edm=AKr904kAAAAA&ccb=7-5&ig_cache_key=MzUyNjUxOTc2MTU0NDA3NjMzNQ%3D%3D.3-ccb7-5&oh=00_Afj7jA9pS3Gdp2eQbHZf6kYbVykL8H_TZoIhcnE4W_ySaA&oe=692F2CF5&_nc_sid=23467f$0", // Zao Jupeer specific
+  jupeer: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv483tj9y0eRsGkbZZHBYGPYzDecgCtxujhQ&s", // Zao Jupeer specific corrected
   onsen: "https://tripeditor.com/wp-content/uploads/2019/06/23230406/YL2H9091_1_1.jpg",
   tadami: "https://cdn.zekkei-japan.jp/images/spots/21abe1bdd12849942c42358e5884125d.jpg",
   castle: "https://static.gltjp.com/glt/data/article/21000/20615/20240205_180824_52942db3_w1920.webp",
@@ -30,10 +30,6 @@ const IMAGES = {
 /**
  * 導航修正說明：
  * 如果 Google Maps 導航位置不準確，請修改下方各行程的 `query` 欄位。
- * 建議填入：
- * 1. 完整的 Google Maps 地址
- * 2. 該地點的「日文名稱」
- * 3. 經緯度 (例如 "38.2601,140.8824")
  */
 export const ITINERARY: DaySchedule[] = [
   {
@@ -60,29 +56,36 @@ export const ITINERARY: DaySchedule[] = [
         location: "仙台機場", 
         activity: "入境、領行李 (1小時)", 
         query: "Sendai Airport 仙台空港",
-        image: IMAGES.airport
+        image: IMAGES.airport,
+        description: "日本東北地區的重要門戶，通關速度通常比東京快。機場內有知名的毛豆奶昔可以嘗試。",
+        tips: "出關後請先上廁所，租車櫃台在1樓國內線到達口附近。"
       },
       { 
         time: "17:40–18:10", 
         location: "仙台站", 
         activity: "移動、熟悉環境 (30分鐘)", 
         query: "Sendai Station 仙台駅",
-        image: IMAGES.sendaiStation
+        image: IMAGES.sendaiStation,
+        description: "東北最大的交通樞紐，連接新幹線、JR及地鐵。車站3樓有著名的「牛舌通」與「壽司通」。",
+        tips: "車站人潮眾多，請注意隨身行李。建議先在車站購買Suica或其他交通卡（若尚未持有）。"
       },
       { 
         time: "18:15–19:15", 
         location: "牛タン焼専門店 東口", 
         activity: "晚餐：享用仙台牛舌", 
-        // 建議確認訂位的餐廳名稱，這裡預設導航至東口
         query: "Sendai Station East Exit Gyutan 仙台駅東口 牛タン",
-        image: IMAGES.gyutan
+        image: IMAGES.gyutan,
+        description: "仙台最著名的美食「厚切牛舌」。炭火燒烤的牛舌口感Q彈脆口，搭配麥飯與牛尾湯是經典套餐。",
+        tips: "熱門店家通常需要排隊，建議避開尖峰時段或提前預約。"
       },
       { 
         time: "21:00", 
         location: "仙台東口 R&B 飯店", 
         activity: "辦理入住 (Check-in)", 
         query: "R&B Hotel Sendai Higashiguchi R&Bホテル仙台東口",
-        image: IMAGES.hotel
+        image: IMAGES.hotel,
+        description: "位於仙台站東口步行可達的商務飯店，交通便利，周邊有超商。",
+        tips: "請備妥所有人的護照以供影印。早餐通常為簡單的麵包與湯品。"
       },
     ]
   },
@@ -92,13 +95,24 @@ export const ITINERARY: DaySchedule[] = [
     title: "山寺與銀山溫泉",
     items: [
       { time: "08:00–09:00", location: "仙台東口 R&B 飯店", activity: "出發準備", query: "R&B Hotel Sendai Higashiguchi", image: IMAGES.hotel },
-      { time: "09:00–09:30", location: "Toyota Rent a Car", activity: "取車手續", query: "Toyota Rent a Car Sendai Station East トヨタレンタカー 仙台駅東口店", image: IMAGES.driving },
+      { 
+        time: "09:00–09:30", 
+        location: "Toyota Rent a Car", 
+        activity: "取車手續", 
+        query: "Toyota Rent a Car Sendai Station East トヨタレンタカー 仙台駅東口店", 
+        image: IMAGES.driving,
+        description: "辦理租車手續。請務必攜帶台灣駕照正本與日文譯本。",
+        tips: "檢查車況時請錄影存證。確認雪胎是否已安裝（冬季必備）。"
+      },
       { 
         time: "10:30–11:30", 
         location: "立石寺（山寺）", 
         activity: "參拜、登山觀景", 
         query: "Yamadera Risshaku-ji Temple 宝珠山 立石寺",
-        image: IMAGES.yamadera
+        image: IMAGES.yamadera,
+        description: "松尾芭蕉曾造訪的名剎，需攀登1015階石階才能到達奧之院。冬季雪景如水墨畫般絕美，從五大堂眺望山谷是經典視角。",
+        openingHours: "08:00 - 17:00",
+        tips: "階梯積雪非常滑，強烈建議穿著防滑釘鞋或購買簡易冰爪。爬山約需40-60分鐘。"
       },
       { time: "12:00–14:30", location: "山寺周邊", activity: "午餐、周邊散策", query: "Yamadera Station 山寺駅", image: IMAGES.yamadera },
       { 
@@ -106,16 +120,19 @@ export const ITINERARY: DaySchedule[] = [
         location: "銀山溫泉", 
         activity: "溫泉街觀光、拍照", 
         query: "Ginzan Onsen 銀山温泉",
-        image: IMAGES.ginzan
+        image: IMAGES.ginzan,
+        description: "彷彿《神隱少女》場景的大正浪漫溫泉街。木造建築群在冬夜點燈下極具氛圍，是東北冬季最熱門的景點。",
+        tips: "日落後的藍調時間（約16:30-17:00）拍照最美。遊客極多，停車場距離溫泉街有段距離，需搭乘接駁車或步行。"
       },
       { time: "18:00–19:00", location: "銀山溫泉周邊", activity: "晚餐", image: IMAGES.ginzan },
       { 
         time: "20:00", 
         location: "一棟貸旅籠 治兵衛 JIHEI", 
         activity: "辦理入住", 
-        // 請填入確切地址，以免導航到同名地點
         query: "一棟貸旅籠 治兵衛 JIHEI", 
-        image: IMAGES.ryokan 
+        image: IMAGES.ryokan,
+        description: "獨棟貸切的日式旅宿，能體驗傳統日本居住氛圍。適合團體入住。",
+        tips: "請遵守民宿入住規則，保持安靜並分類垃圾。"
       },
     ]
   },
@@ -130,14 +147,19 @@ export const ITINERARY: DaySchedule[] = [
         location: "藏王 Jupeer", 
         activity: "租借雪裝", 
         query: "Zao Base Center Jupeer 蔵王ベースセンタージュピア", 
-        image: IMAGES.jupeer 
+        image: IMAGES.jupeer,
+        description: "藏王滑雪場的大型基地中心，提供雪具、雪衣租借服務，更衣空間寬敞。",
+        tips: "建議事先確認尺寸。租借時需填寫表格，請預留時間。"
       },
       { 
         time: "08:30–12:30", 
         location: "藏王樹冰", 
         activity: "搭纜車、觀賞樹冰", 
         query: "Zao Ropeway Sanroku Line 蔵王ロープウェイ 山麓線",
-        image: IMAGES.snowMonsters
+        image: IMAGES.snowMonsters,
+        description: "世界罕見的自然奇觀「Snow Monsters」。需搭乘兩段纜車至山頂，沿途可俯瞰壯觀的樹冰原。",
+        openingHours: "08:30 - 17:00",
+        tips: "山頂溫度極低（約-10度至-15度），風大，請務必做好最高等級保暖（毛帽、手套、圍巾）。纜車排隊人潮眾多，建議一早就去。"
       },
       { time: "12:30–14:00", location: "藏王纜車山頂站", activity: "午餐、休息", query: "Zao Ropeway Summit Station 地蔵山頂駅", image: IMAGES.snowMonsters },
       { 
@@ -145,7 +167,9 @@ export const ITINERARY: DaySchedule[] = [
         location: "蔵王温泉滑雪場", 
         activity: "滑雪、雪上活動", 
         query: "Zao Onsen Ski Resort Uwanodai 蔵王温泉スキー場 上の台ゲレンデ",
-        image: IMAGES.skiing
+        image: IMAGES.skiing,
+        description: "東北最大級的滑雪場，擁有豐富的雪道變化。上面的台滑雪場適合初學者練習。",
+        tips: "初學者建議請教練或在平緩區域練習。滑雪消耗體力，請適時補充水分與熱量。"
       },
       { time: "19:00–20:00", location: "Jupeer", activity: "歸還雪裝", query: "Zao Base Center Jupeer 蔵王ベースセンタージュピア", image: IMAGES.jupeer },
       { time: "20:30", location: "治兵衛 JIHEI", activity: "返回住宿", query: "一棟貸旅籠 治兵衛 JIHEI", image: IMAGES.ryokan },
@@ -162,7 +186,10 @@ export const ITINERARY: DaySchedule[] = [
         location: "福島安達屋", 
         activity: "日歸泡湯", 
         query: "Takayu Onsen Adachiya 高湯温泉 安達屋",
-        image: IMAGES.onsen
+        image: IMAGES.onsen,
+        description: "位於標高750公尺的高湯溫泉，以混浴露天溫泉「大氣之湯」聞名。乳白色的硫磺泉質極佳，被譽為「藥湯」。",
+        openingHours: "日歸溫泉 10:00 - 13:00 (需確認)",
+        tips: "混浴區域可圍浴巾入浴。請勿在溫泉內使用手機拍照。刺青者可能無法進入公共池，請先確認。"
       },
       { time: "13:30–14:30", location: "安達屋周邊", activity: "午餐", query: "Takayu Onsen 高湯温泉", image: IMAGES.onsen },
       { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "ショッピングパークアスク", image: IMAGES.house },
@@ -170,9 +197,10 @@ export const ITINERARY: DaySchedule[] = [
         time: "16:30", 
         location: "須賀川包棟民宿", 
         activity: "Check-in、料理晚餐", 
-        // ⚠️ 重要：私人地址請手動修正，例如："Sukagawa City Hall" 或填入確切地址
         query: "37.315989794096986, 140.22586626702645", 
-        image: IMAGES.house 
+        image: IMAGES.house,
+        description: "享受包棟民宿的樂趣，大家一起下廚料理晚餐，度過溫馨的夜晚。",
+        tips: "使用廚房後請協助清理恢復原狀。注意垃圾分類規定。"
       },
     ]
   },
@@ -187,14 +215,19 @@ export const ITINERARY: DaySchedule[] = [
         location: "第一只見川橋拍攝點", 
         activity: "絕景攝影", 
         query: "No.1 Tadami River Bridge Viewpoint 第一只見川橋梁ビューポイント",
-        image: IMAGES.tadami
+        image: IMAGES.tadami,
+        description: "鐵道迷必訪聖地。可拍攝列車行經鐵橋倒映在川面上的夢幻絕景。冬季雪景更是經典。",
+        tips: "需攀登步道至展望台。早上列車通過約：09:03 (往會津)、09:17 (往小出)。"
       },
       { 
         time: "10:30–11:30", 
         location: "會津若松城", 
         activity: "登城參觀", 
         query: "Tsuruga Castle 鶴ヶ城",
-        image: IMAGES.castle
+        image: IMAGES.castle,
+        description: "又名「鶴城」，是日本唯一一座紅瓦天守閣。幕末戊辰戰爭的激戰地，充滿歷史故事。",
+        openingHours: "08:30 - 17:00",
+        tips: "天守閣內展示豐富的歷史文物。登上頂樓可眺望會津若松市區全景。"
       },
       { time: "11:30–13:00", location: "會津若松城周邊", activity: "午餐", image: IMAGES.castle },
       { 
@@ -202,7 +235,9 @@ export const ITINERARY: DaySchedule[] = [
         location: "大內宿", 
         activity: "漫遊茅草屋古街", 
         query: "Ouchi-juku 大内宿",
-        image: IMAGES.ouchijuku
+        image: IMAGES.ouchijuku,
+        description: "與白川鄉合掌村齊名的茅草屋聚落，保留江戶時代宿場町的風貌。必吃特產是「大蔥蕎麥麵」（用整根大蔥當筷子吃）。",
+        tips: "冬季遊客較少，更有古樸氛圍。名物「大蔥蕎麥麵」吃起來有點嗆辣，是獨特體驗。"
       },
       { time: "17:30", location: "須賀川包棟民宿", activity: "返回休息", query: "37.315989794096986, 140.22586626702645", image: IMAGES.house },
     ]
@@ -218,14 +253,20 @@ export const ITINERARY: DaySchedule[] = [
         location: "金蛇水神社", 
         activity: "參拜財運神社", 
         query: "Kanahebisui Shrine 金蛇水神社", 
-        image: IMAGES.tem 
+        image: IMAGES.tem,
+        description: "以提升金運、商賣繁盛聞名的神社。境內有許多蛇紋石，據說用錢包磨擦可以增加財運。紫藤花季也非常有名。",
+        openingHours: "08:00 - 16:00",
+        tips: "參拜完可以在附設的SandoTerrace休息，品嚐以白蛇為意象的甜點與咖啡。"
       },
       { 
         time: "11:30–14:30", 
         location: "Mitsui Outlet Park", 
         activity: "購物、午餐", 
         query: "Mitsui Outlet Park Sendai Port 三井アウトレットパーク 仙台港",
-        image: IMAGES.shopping
+        image: IMAGES.shopping,
+        description: "東北最大的 Outlet Mall，匯集國內外知名品牌。摩天輪是其地標。",
+        openingHours: "10:00 - 20:00",
+        tips: "把握最後購物機會。服務中心提供退稅服務諮詢。午餐可在美食街解決。"
       },
       { time: "15:00–15:30", location: "豐田租車 仙台機場店", activity: "還車手續", query: "Toyota Rent a Car Sendai Airport トヨタレンタカー 仙台空港店", image: IMAGES.driving },
       { time: "15:30–17:25", location: "仙台機場", activity: "登機手續、免稅店", query: "Sendai Airport 仙台空港", image: IMAGES.airport },

@@ -26,6 +26,9 @@ export interface ItineraryItem {
   query?: string;
   image?: string; // URL for the location image
   flight?: FlightDetails; // Optional flight details
+  description?: string; // New: Description of the place
+  openingHours?: string; // New: Operating hours
+  tips?: string; // New: Travel tips
 }
 
 export interface DaySchedule {
