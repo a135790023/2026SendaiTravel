@@ -30,7 +30,7 @@ const PackingList: React.FC = () => {
   }, {} as Record<string, PackingItem[]>);
 
   return (
-    <div className="pb-24 animate-fade-in bg-slate-900 min-h-full">
+    <div className="pb-24 animate-fade-in bg-transparent min-h-full">
       {/* Sticky Dark Glass Header */}
       <div className="bg-black/60 backdrop-blur-xl border-b border-white/10 p-6 pt-12 pb-6 sticky top-0 z-20 shadow-2xl">
         <div className="flex items-center justify-between mb-2">

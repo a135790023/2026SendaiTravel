@@ -50,7 +50,7 @@ const Tools: React.FC = () => {
   };
 
   return (
-    <div className="pb-24 animate-fade-in min-h-full bg-slate-900">
+    <div className="pb-24 animate-fade-in min-h-full bg-transparent">
       <div className="bg-black/60 backdrop-blur-xl border-b border-white/10 p-6 pt-12 pb-6 sticky top-0 z-20">
         <div className="flex items-center justify-between mb-2">
            <h2 className="text-2xl font-bold text-white tracking-tight">實用工具</h2>

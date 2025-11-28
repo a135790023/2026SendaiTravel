@@ -97,55 +97,56 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
       <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]" /> {/* Subtle blur for depth */}
 
       {/* 3. Content Layer */}
-      <div className="relative z-10 flex flex-col h-full pt-safe-top pb-24 px-6 justify-between animate-fade-in">
+      <div className="relative z-10 flex flex-col h-full pt-safe-top pb-20 px-6 justify-between animate-fade-in">
         
         {/* Top Section: Date & Weather */}
-        <div className="flex justify-between items-start mt-4">
+        <div className="flex justify-between items-start mt-2">
           <div className="text-white drop-shadow-md">
-            <h1 className="text-2xl font-bold tracking-tight mb-1">Sendai Trip</h1>
-            <p className="text-sm font-medium opacity-90 uppercase tracking-widest">{today}</p>
+            <h1 className="text-xl font-bold tracking-tight mb-0.5">Sendai Trip</h1>
+            <p className="text-xs font-medium opacity-90 uppercase tracking-widest">{today}</p>
           </div>
           <WeatherWidget variant="minimal" />
         </div>
 
         {/* Middle Section: Countdown & Travelers */}
-        <div className="flex flex-col items-center justify-center flex-1 w-full">
+        <div className="flex flex-col items-center justify-center flex-1 w-full -mt-4">
           
-          {/* Countdown */}
-          <div className="text-center text-white drop-shadow-lg transform -translate-y-4">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] mb-4 opacity-80">Time Until Departure</p>
-            <div className="flex items-baseline justify-center space-x-4">
+          {/* Countdown - Compacted for Mobile */}
+          <div className="text-center text-white drop-shadow-lg transform -translate-y-2">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-80">Time Until Departure</p>
+            <div className="flex items-baseline justify-center space-x-2">
               <div className="flex flex-col items-center">
-                 <span className="text-7xl font-thin tracking-tighter">{timeLeft.days}</span>
-                 <span className="text-xs font-medium uppercase mt-1 opacity-80">Days</span>
+                 {/* Reduced font size for mobile from 7xl to 5xl */}
+                 <span className="text-5xl md:text-7xl font-thin tracking-tighter">{timeLeft.days}</span>
+                 <span className="text-[10px] font-medium uppercase mt-0.5 opacity-80">Days</span>
               </div>
-              <span className="text-4xl font-thin opacity-50 pb-6">:</span>
+              <span className="text-3xl font-thin opacity-50 pb-4">:</span>
               <div className="flex flex-col items-center">
-                 <span className="text-7xl font-thin tracking-tighter">{timeLeft.hours}</span>
-                 <span className="text-xs font-medium uppercase mt-1 opacity-80">Hours</span>
+                 <span className="text-5xl md:text-7xl font-thin tracking-tighter">{timeLeft.hours}</span>
+                 <span className="text-[10px] font-medium uppercase mt-0.5 opacity-80">Hours</span>
               </div>
             </div>
-            <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm">
+            <div className="mt-3 inline-flex items-center px-2 py-0.5 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm">
                <span className="text-[10px] font-mono tracking-wider">2026.01.02 — 01.07</span>
             </div>
           </div>
 
-          {/* Travelers List (The Ritual) */}
-          <div className="w-full mt-12">
-             <div className="flex items-center justify-center mb-3 opacity-70 space-x-2">
-                <div className="h-[1px] w-8 bg-white/50"></div>
-                <Users size={12} className="text-white" />
+          {/* Travelers List (The Ritual) - Margin Reduced */}
+          <div className="w-full mt-6">
+             <div className="flex items-center justify-center mb-2 opacity-70 space-x-2">
+                <div className="h-[1px] w-6 bg-white/50"></div>
+                <Users size={10} className="text-white" />
                 <span className="text-[10px] font-medium text-white uppercase tracking-widest">Travel Members</span>
-                <div className="h-[1px] w-8 bg-white/50"></div>
+                <div className="h-[1px] w-6 bg-white/50"></div>
              </div>
              
              {/* Horizontal Scroll Container with Fade Edges */}
              <div className="relative w-full">
-                <div className="flex overflow-x-auto no-scrollbar space-x-3 px-4 pb-2 justify-start md:justify-center">
+                <div className="flex overflow-x-auto no-scrollbar space-x-2 px-4 pb-2 justify-start md:justify-center">
                   {TRAVELERS.map((name, index) => (
                     <div 
                       key={name}
-                      className="flex-shrink-0 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-xs font-medium tracking-wide shadow-lg hover:bg-white/20 transition-all duration-300 select-none animate-fade-in"
+                      className="flex-shrink-0 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-[11px] font-medium tracking-wide shadow-lg hover:bg-white/20 transition-all duration-300 select-none animate-fade-in"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {name}
@@ -161,7 +162,7 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
         </div>
 
         {/* Bottom Section: Next Stop Glass Card */}
-        <div className="w-full">
+        <div className="w-full mb-1">
           <div className="flex items-center justify-between mb-2 px-1">
              <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest flex items-center">
                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2 animate-pulse"></span>
@@ -179,16 +180,16 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
             onClick={() => setTab('itinerary')}
             className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-2xl transition-all active:scale-[0.98]"
           >
-            <div className="p-5 flex items-start space-x-4">
+            <div className="p-4 flex items-start space-x-4">
                {/* Thumbnail Image */}
                {nextStop.image && (
-                 <div className="h-16 w-16 rounded-xl overflow-hidden shadow-lg flex-shrink-0 border border-white/10">
+                 <div className="h-14 w-14 rounded-xl overflow-hidden shadow-lg flex-shrink-0 border border-white/10">
                    <img src={nextStop.image} alt="Location" className="h-full w-full object-cover" />
                  </div>
                )}
                
                <div className="flex-1 min-w-0">
-                  <div className="flex items-center text-blue-100 text-[10px] font-bold tracking-wide mb-1">
+                  <div className="flex items-center text-blue-100 text-[10px] font-bold tracking-wide mb-0.5">
                     <Clock size={10} className="mr-1" />
                     {nextStop.time}
                     <span className="mx-2 opacity-50">|</span>
@@ -196,17 +197,17 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
                     {nextStop.dayTitle}
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white leading-tight mb-1 truncate drop-shadow-sm">
+                  <h3 className="text-lg font-bold text-white leading-tight mb-0.5 truncate drop-shadow-sm">
                     {nextStop.location}
                   </h3>
                   
-                  <p className="text-xs text-gray-200 line-clamp-1 opacity-90">
+                  <p className="text-[11px] text-gray-200 line-clamp-1 opacity-90">
                     {nextStop.activity}
                   </p>
                </div>
 
-               <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white flex-shrink-0 mt-2 group-hover:bg-white group-hover:text-blue-900 transition-colors">
-                  <Navigation size={14} />
+               <div className="h-7 w-7 rounded-full bg-white/20 flex items-center justify-center text-white flex-shrink-0 mt-1 group-hover:bg-white group-hover:text-blue-900 transition-colors">
+                  <Navigation size={12} />
                </div>
             </div>
             

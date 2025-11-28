@@ -22,7 +22,20 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-black min-h-screen font-sans text-white overflow-hidden relative selection:bg-blue-500/30">
-      <main className="h-screen overflow-hidden flex flex-col">
+      
+      {/* GLOBAL BACKGROUND TEXTURE (Visible on non-home pages) */}
+      <div className="fixed inset-0 z-0">
+        {/* 使用 Unsplash 高品質且穩定的深色冰霜/抽象紋理圖片 */}
+        <img 
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
+          className="w-full h-full object-cover opacity-40"
+          alt="texture"
+        />
+        {/* Dark Overlay with Blur to create the "Glass" depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-black/80 to-slate-950/90 backdrop-blur-[2px]"></div>
+      </div>
+
+      <main className="h-screen overflow-hidden flex flex-col relative z-10">
         <div className="flex-1 overflow-y-auto no-scrollbar scroll-smooth">
           {renderContent()}
         </div>

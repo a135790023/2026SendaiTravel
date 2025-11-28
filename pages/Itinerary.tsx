@@ -19,9 +19,9 @@ const Itinerary: React.FC = () => {
   };
 
   return (
-    <div className="min-h-full bg-slate-900 pb-24 relative">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none">
+    <div className="min-h-full bg-transparent pb-24 relative">
+      {/* Background Ambience - kept for extra depth */}
+      <div className="fixed inset-0 pointer-events-none z-0">
          <div className="absolute top-0 left-0 w-full h-96 bg-blue-900/10 blur-3xl opacity-30"></div>
          <div className="absolute bottom-0 right-0 w-full h-96 bg-purple-900/10 blur-3xl opacity-20"></div>
       </div>
@@ -107,7 +107,6 @@ const Itinerary: React.FC = () => {
            ></div>
 
            {/* Modal Card */}
-           {/* Key Change: bg-zinc-950/80 instead of bg-slate-900 to remove blue tint */}
            <div className="relative w-full max-w-md bg-zinc-950/85 backdrop-blur-3xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border-t sm:border border-white/10 max-h-[90vh] overflow-y-auto no-scrollbar">
              
              {/* Header Image */}
@@ -136,7 +135,6 @@ const Itinerary: React.FC = () => {
              </div>
 
              {/* Content Body */}
-             {/* Added pb-24 to prevent nav bar overlap issues */}
              <div className="p-6 space-y-6 pb-24">
                 
                 {/* Description */}
