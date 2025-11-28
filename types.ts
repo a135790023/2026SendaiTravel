@@ -1,4 +1,22 @@
 
+export interface FlightDetails {
+  airline: string;
+  flightNo: string;
+  departure: {
+    code: string;
+    city: string;
+    terminal: string;
+    time: string;
+  };
+  arrival: {
+    code: string;
+    city: string;
+    terminal: string;
+    time: string;
+  };
+  duration: string;
+}
+
 export interface ItineraryItem {
   time: string;
   location: string;
@@ -7,6 +25,7 @@ export interface ItineraryItem {
   coordinates?: { lat: number; lng: number };
   query?: string;
   image?: string; // URL for the location image
+  flight?: FlightDetails; // Optional flight details
 }
 
 export interface DaySchedule {

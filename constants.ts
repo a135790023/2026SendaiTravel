@@ -5,23 +5,26 @@ export const TRIP_START_DATE = "2026-01-02T00:00:00+09:00"; // JST
 
 // Reliable Unsplash URLs
 const IMAGES = {
-  plane: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80",
-  airport: "https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&w=800&q=80",
-  sendaiStation: "https://images.unsplash.com/photo-1554797589-72447550e562?auto=format&fit=crop&w=800&q=80",
-  gyutan: "https://images.unsplash.com/photo-1544025162-d76690b67f11?auto=format&fit=crop&w=800&q=80",
-  hotel: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
-  driving: "https://images.unsplash.com/photo-1473625247510-8ceb1760943f?auto=format&fit=crop&w=800&q=80", // Snowy road
-  yamadera: "https://images.unsplash.com/photo-1528360983277-13d9b670953d?auto=format&fit=crop&w=800&q=80",
-  ginzan: "https://images.unsplash.com/photo-1546816040-6927e16d0046?auto=format&fit=crop&w=800&q=80",
-  ryokan: "https://images.unsplash.com/photo-1498503182478-8b517d3017f1?auto=format&fit=crop&w=800&q=80", // Placeholder for Jihei
-  snowMonsters: "https://images.unsplash.com/photo-1548777123-10d294833216?auto=format&fit=crop&w=800&q=80",
-  skiing: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=800&q=80",
-  onsen: "https://images.unsplash.com/photo-1565427271421-4d05cb93361e?auto=format&fit=crop&w=800&q=80",
-  tadami: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80",
-  castle: "https://images.unsplash.com/photo-1596423067809-5a8286df9359?auto=format&fit=crop&w=800&q=80",
-  ouchijuku: "https://images.unsplash.com/photo-1565551381387-a2e6cb130090?auto=format&fit=crop&w=800&q=80",
-  house: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80", // Placeholder for Sukagawa
-  shopping: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80"
+  plane: "https://icrvb3jy.xinmedia.com/solomo/article/b/5/1/b5194e1b-c5db-4b5b-964a-83a4d3b0d50e.jpeg",
+  airport: "https://www.tabirai.net/tabirai-uploader/img/0005493/s8_0005493.jpg",
+  sendaiStation: "https://s-style.machico.mu/wp-content/uploads/2023/10/S__86155302_0.jpg",
+  gyutan: "https://matipura.com/CORE/wp-content/uploads/2017/03/02-5.jpg",
+  hotel: "https://www.washingtonhotel.co.jp/rb/_data/cache/images/2025/05/28/1300_578_71c971338d420790ace53b39fe7af95bbee2e953.webp",
+  driving: "https://image.card.tw.r10s.com/images/corp/campaign/1400/Toyota_04.jpg", // Snowy road
+  yamadera: "https://www.visityamagata.jp/wp/wp-content/uploads/2024/07/%E4%BA%94%E5%A4%A7%E5%A0%821.jpg.webp",
+  ginzan: "https://icrvb3jy.xinmedia.com/solomo/article/7/5/2/752e384b-d5f4-4d6e-b7ea-717d43c66cf2.jpeg",
+  ryokan: "https://a0.muscache.com/im/pictures/hosting/Hosting-1287479416884768737/original/e2416226-99a4-4fd2-8bf8-95efb76d825f.jpeg?im_w=960", // Placeholder for Jihei
+  snowMonsters: "https://i0.wp.com/journey.tw/wp-content/uploads/2023-10-17-191105-95.jpg?resize=1100%2C734&quality=99&ssl=1",
+  skiing: "https://www.sundaytour.com.tw/upfiles/chinese/attractions/tw_attractions_caty01689064716.jpg",
+  jupeer: "https://instagram.fkhh1-1.fna.fbcdn.net/v/t39.30808-6/470584014_10235656484257152_1544646902909205017_n.jpg?stp=cp6_dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InRocmVhZHMuQ0FST1VTRUxfSVRFTS5pbWFnZV91cmxnZW4uMjA0OHgxNTM2LnNkci5mMzA4MDguZGVmYXVsdF9pbWFnZS5jMiJ9&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=100&_nc_oc=Q6cZ2QEBAUz4cWLus-tLJ-XQPMrRNRmXm2bfuPqL-q0QrLsbhniM5g1eVFZUWt7vAcIuw4Q&_nc_ohc=FN0mTlDewpsQ7kNvwGJFnvu&_nc_gid=LLKbQShaLXOA8BCrM6TuIQ&edm=AKr904kAAAAA&ccb=7-5&ig_cache_key=MzUyNjUxOTc2MTU0NDA3NjMzNQ%3D%3D.3-ccb7-5&oh=00_Afj7jA9pS3Gdp2eQbHZf6kYbVykL8H_TZoIhcnE4W_ySaA&oe=692F2CF5&_nc_sid=23467f$0", // Zao Jupeer specific
+  onsen: "https://tripeditor.com/wp-content/uploads/2019/06/23230406/YL2H9091_1_1.jpg",
+  tadami: "https://cdn.zekkei-japan.jp/images/spots/21abe1bdd12849942c42358e5884125d.jpg",
+  castle: "https://static.gltjp.com/glt/data/article/21000/20615/20240205_180824_52942db3_w1920.webp",
+  ouchijuku: "https://www.tohokukanko.jp/lsc/upfile/spot/0000/1546/1546_6_l.jpg",
+  house: "https://a0.muscache.com/im/pictures/miso/Hosting-638600503361964053/original/c7a41eff-6b71-403f-a081-e19d64e06535.jpeg?im_w=960", // Placeholder for Sukagawa
+  shopping: "https://static.gltjp.com/glt/data/directory/14000/13814/20221009_124102_3a40844d_w1920.webp",
+  fuku: "https://i0.wp.com/journey.tw/wp-content/uploads/2023-11-29-153522-66.jpg?resize=1100%2C734&quality=99&ssl=1",
+  tem: "https://www.ana.co.jp/japan-travel-planner/area/tohoku/miyagi/0000016/main.jpg"
 };
 
 export const ITINERARY: DaySchedule[] = [
@@ -35,7 +38,14 @@ export const ITINERARY: DaySchedule[] = [
         location: "TPE → SDJ (JX862)", 
         activity: "搭乘星宇航空前往仙台", 
         isTransport: true,
-        image: IMAGES.plane
+        image: IMAGES.plane,
+        flight: {
+          airline: "STARLUX Airlines",
+          flightNo: "JX862",
+          departure: { code: "TPE", city: "Taipei", terminal: "T1", time: "11:50" },
+          arrival: { code: "SDJ", city: "Sendai", terminal: "I", time: "16:00" },
+          duration: "3h 10m"
+        }
       },
       { 
         time: "16:00–17:00", 
@@ -98,8 +108,8 @@ export const ITINERARY: DaySchedule[] = [
     dayOfWeek: "週日",
     title: "藏王樹冰與滑雪",
     items: [
-      { time: "06:00–07:00", location: "治兵衛 JIHEI", activity: "前往藏王", isTransport: true, image: IMAGES.driving },
-      { time: "07:30–08:30", location: "藏王 Jupeer", activity: "租借雪裝", query: "Zao Base Center Jupeer", image: IMAGES.skiing },
+      { time: "06:00–07:00", location: "治兵衛 JIHEI", activity: "前往藏王", isTransport: true, image: IMAGES.ryokan },
+      { time: "07:30–08:30", location: "藏王 Jupeer", activity: "租借雪裝", query: "Zao Base Center Jupeer", image: IMAGES.jupeer },
       { 
         time: "08:30–12:30", 
         location: "藏王樹冰", 
@@ -115,7 +125,7 @@ export const ITINERARY: DaySchedule[] = [
         query: "Zao Onsen Ski Resort Uwanodai",
         image: IMAGES.skiing
       },
-      { time: "19:00–20:00", location: "Jupeer", activity: "歸還雪裝", query: "Zao Base Center Jupeer", image: IMAGES.skiing },
+      { time: "19:00–20:00", location: "Jupeer", activity: "歸還雪裝", query: "Zao Base Center Jupeer", image: IMAGES.jupeer },
       { time: "20:30", location: "治兵衛 JIHEI", activity: "返回住宿", query: "Hatago Jihei", image: IMAGES.ryokan },
     ]
   },
@@ -124,7 +134,7 @@ export const ITINERARY: DaySchedule[] = [
     dayOfWeek: "週一",
     title: "福島泡湯與移動",
     items: [
-      { time: "08:00–10:30", location: "移動至福島", activity: "長途移動", isTransport: true, image: IMAGES.driving },
+      { time: "08:00–10:30", location: "移動至福島", activity: "長途移動", isTransport: true, image: IMAGES.fuku },
       { 
         time: "10:30–13:30", 
         location: "福島安達屋", 
@@ -133,7 +143,7 @@ export const ITINERARY: DaySchedule[] = [
         image: IMAGES.onsen
       },
       { time: "13:30–14:30", location: "安達屋周邊", activity: "午餐", query: "Takayu Onsen", image: IMAGES.onsen },
-      { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "Sukagawa Supermarket", image: IMAGES.driving },
+      { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "Sukagawa Supermarket", image: IMAGES.house },
       { time: "16:30", location: "須賀川包棟民宿", activity: "Check-in、料理晚餐", query: "Sukagawa City Hall", image: IMAGES.house },
     ]
   },
@@ -142,7 +152,7 @@ export const ITINERARY: DaySchedule[] = [
     dayOfWeek: "週二",
     title: "會津若松與大內宿",
     items: [
-      { time: "07:00–08:30", location: "民宿 → 只見川", activity: "移動", isTransport: true, image: IMAGES.driving },
+      { time: "07:00–08:30", location: "民宿 → 只見川", activity: "移動", isTransport: true, image: IMAGES.tadami },
       { 
         time: "08:30–09:30", 
         location: "第一只見川橋拍攝點", 
@@ -173,8 +183,8 @@ export const ITINERARY: DaySchedule[] = [
     dayOfWeek: "週三",
     title: "仙台購物與返程",
     items: [
-      { time: "08:00–10:00", location: "民宿 → 宮城縣", activity: "移動", isTransport: true, image: IMAGES.driving },
-      { time: "10:00–11:00", location: "金蛇水神社", activity: "參拜財運神社", query: "Kanahebisui Shrine", image: IMAGES.yamadera }, // Similar vibe
+      { time: "08:00–10:00", location: "民宿 → 宮城縣", activity: "移動", isTransport: true, image: IMAGES.sendaiStation },
+      { time: "10:00–11:00", location: "金蛇水神社", activity: "參拜財運神社", query: "Kanahebisui Shrine", image: IMAGES.tem },
       { 
         time: "11:30–14:30", 
         location: "Mitsui Outlet Park", 
@@ -184,7 +194,20 @@ export const ITINERARY: DaySchedule[] = [
       },
       { time: "15:00–15:30", location: "豐田租車 仙台機場店", activity: "還車手續", query: "Toyota Rent a Car Sendai Airport", image: IMAGES.driving },
       { time: "15:30–17:25", location: "仙台機場", activity: "登機手續、免稅店", query: "Sendai Airport", image: IMAGES.airport },
-      { time: "17:25–20:35", location: "SDJ → TPE (JX863)", activity: "搭乘飛機返回台北", isTransport: true, image: IMAGES.plane },
+      { 
+        time: "17:25–20:35", 
+        location: "SDJ → TPE (JX863)", 
+        activity: "搭乘飛機返回台北", 
+        isTransport: true, 
+        image: IMAGES.plane,
+        flight: {
+          airline: "STARLUX Airlines",
+          flightNo: "JX863",
+          departure: { code: "SDJ", city: "Sendai", terminal: "I", time: "17:25" },
+          arrival: { code: "TPE", city: "Taipei", terminal: "T1", time: "20:35" },
+          duration: "4h 10m"
+        }
+      },
     ]
   },
 ];

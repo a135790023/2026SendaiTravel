@@ -1,10 +1,12 @@
 
 import React, { useState } from 'react';
 import { ITINERARY } from '../constants';
-import { Navigation, Car, Plane, Clock, MapPin } from 'lucide-react';
+import { Navigation, Car, Plane, Clock, MapPin, X, PlaneTakeoff, PlaneLanding } from 'lucide-react';
+import { FlightDetails } from '../types';
 
 const Itinerary: React.FC = () => {
   const [activeDay, setActiveDay] = useState(0);
+  const [selectedFlight, setSelectedFlight] = useState<FlightDetails | null>(null);
 
   const handleOpenMap = (query: string) => {
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
@@ -12,12 +14,99 @@ const Itinerary: React.FC = () => {
   };
 
   return (
-    <div className="min-h-full bg-slate-900 pb-24">
+    <div className="min-h-full bg-slate-900 pb-24 relative">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none">
          <div className="absolute top-0 left-0 w-full h-96 bg-blue-900/20 blur-3xl opacity-50"></div>
          <div className="absolute bottom-0 right-0 w-full h-96 bg-purple-900/10 blur-3xl opacity-30"></div>
       </div>
+
+      {/* Flight Detail Modal (Digital Boarding Pass) */}
+      {selectedFlight && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelectedFlight(null)}
+          ></div>
+
+          {/* Modal Card */}
+          <div className="relative bg-gradient-to-br from-slate-800 to-slate-900 border border-white/20 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl transform transition-all scale-100">
+             {/* Decorative Top */}
+             <div className="h-32 bg-gradient-to-r from-yellow-700 to-yellow-600 relative overflow-hidden flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+                <h3 className="text-white text-2xl font-black tracking-widest uppercase z-10 drop-shadow-md">Boarding Pass</h3>
+             </div>
+
+             <div className="px-6 py-6 relative">
+                {/* Airline & Flight No */}
+                <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-4">
+                   <div>
+                     <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Airline</p>
+                     <p className="text-white font-bold text-lg">{selectedFlight.airline}</p>
+                   </div>
+                   <div className="text-right">
+                     <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Flight No</p>
+                     <p className="text-yellow-500 font-mono text-2xl font-black">{selectedFlight.flightNo}</p>
+                   </div>
+                </div>
+
+                {/* Route Visualization */}
+                <div className="flex justify-between items-center mb-8">
+                   <div className="text-center">
+                      <p className="text-4xl font-black text-white">{selectedFlight.departure.code}</p>
+                      <p className="text-xs text-gray-400 mt-1">{selectedFlight.departure.city}</p>
+                   </div>
+                   
+                   <div className="flex-1 px-4 flex flex-col items-center">
+                      <div className="flex items-center text-gray-500 text-xs mb-1 font-mono">{selectedFlight.duration}</div>
+                      <div className="w-full h-0.5 bg-gray-600 relative flex items-center justify-center">
+                         <div className="w-2 h-2 bg-white rounded-full absolute left-0"></div>
+                         <div className="w-2 h-2 bg-white rounded-full absolute right-0"></div>
+                         <Plane className="text-yellow-500 fill-current rotate-90 absolute" size={16} />
+                      </div>
+                   </div>
+
+                   <div className="text-center">
+                      <p className="text-4xl font-black text-white">{selectedFlight.arrival.code}</p>
+                      <p className="text-xs text-gray-400 mt-1">{selectedFlight.arrival.city}</p>
+                   </div>
+                </div>
+
+                {/* Time & Terminal Grid */}
+                <div className="grid grid-cols-2 gap-y-6 gap-x-4 bg-black/20 rounded-xl p-4 border border-white/5">
+                   <div>
+                      <div className="flex items-center space-x-1 text-xs text-gray-500 font-bold uppercase mb-1">
+                        <PlaneTakeoff size={12} /> <span>Departs</span>
+                      </div>
+                      <p className="text-xl font-bold text-white">{selectedFlight.departure.time}</p>
+                      <p className="text-xs text-blue-300 mt-0.5">Terminal {selectedFlight.departure.terminal}</p>
+                   </div>
+                   <div>
+                      <div className="flex items-center space-x-1 text-xs text-gray-500 font-bold uppercase mb-1">
+                        <PlaneLanding size={12} /> <span>Arrives</span>
+                      </div>
+                      <p className="text-xl font-bold text-white">{selectedFlight.arrival.time}</p>
+                      <p className="text-xs text-blue-300 mt-0.5">Terminal {selectedFlight.arrival.terminal}</p>
+                   </div>
+                </div>
+
+                {/* Close Button */}
+                <button 
+                  onClick={() => setSelectedFlight(null)}
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-white/70 hover:bg-black/40 hover:text-white transition-colors"
+                >
+                  <X size={16} />
+                </button>
+             </div>
+             
+             {/* Cutout Effect */}
+             <div className="absolute top-[128px] -left-3 w-6 h-6 bg-slate-900 rounded-full z-20"></div>
+             <div className="absolute top-[128px] -right-3 w-6 h-6 bg-slate-900 rounded-full z-20"></div>
+          </div>
+        </div>
+      )}
 
       {/* Sticky Dark Glass Header */}
       <div className="sticky top-0 z-30 bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl pt-safe-top pb-4 px-4 transition-all">
@@ -68,10 +157,17 @@ const Itinerary: React.FC = () => {
               </div>
               
               {/* Content Card */}
-              <div className="relative ml-4 flex-1">
+              <div 
+                 className="relative ml-4 flex-1"
+                 onClick={() => {
+                   if (item.flight) {
+                     setSelectedFlight(item.flight);
+                   }
+                 }}
+              >
                  
                  {/* Card Container */}
-                 <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden shadow-lg hover:bg-slate-800/70 transition-colors duration-300">
+                 <div className={`bg-slate-800/50 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden shadow-lg hover:bg-slate-800/70 transition-colors duration-300 ${item.flight ? 'cursor-pointer hover:border-yellow-500/50' : ''}`}>
                     
                     {/* Visual Header (Image) */}
                     {item.image ? (
@@ -96,6 +192,13 @@ const Itinerary: React.FC = () => {
                            >
                              <Navigation size={14} />
                            </button>
+                         )}
+                         
+                         {/* Flight Indicator */}
+                         {item.flight && (
+                            <div className="absolute top-3 right-3 bg-yellow-500/80 backdrop-blur text-black text-[10px] font-bold px-2 py-1 rounded-full border border-yellow-300/50 shadow-lg animate-pulse">
+                               TAP FOR DETAILS
+                            </div>
                          )}
 
                          <div className="absolute bottom-3 left-4 right-4">
