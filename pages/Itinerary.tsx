@@ -24,14 +24,14 @@ const Itinerary: React.FC = () => {
       {/* 1. Flight Detail Modal (Digital Boarding Pass) */}
       {selectedFlight && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-simple transform-gpu">
-          {/* Backdrop: Subtle dark overlay for focus */}
+          {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
             onClick={() => setSelectedFlight(null)}
           ></div>
           
-          {/* Modal Content: Increased opacity for better glass effect on iOS */}
-          <div className="relative bg-slate-900/60 backdrop-blur-xl border border-white/20 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+          {/* Modal Content: High Opacity Glass (85%) to block background text */}
+          <div className="relative bg-slate-900/85 backdrop-blur-xl border border-white/20 w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
              <div className="h-32 bg-white/5 relative overflow-hidden flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-purple-500/10"></div>
                 <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
@@ -93,17 +93,17 @@ const Itinerary: React.FC = () => {
         </div>
       )}
 
-      {/* 2. Place Detail Modal (Premium Glass - Increased Opacity for Visibility) */}
+      {/* 2. Place Detail Modal */}
       {selectedPlace && !selectedPlace.flight && (
          <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center sm:p-4 animate-fade-simple transform-gpu">
-           {/* Backdrop */}
+           {/* Backdrop - Darker to help focus */}
            <div 
-             className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity"
+             className="absolute inset-0 bg-black/40 backdrop-blur-[3px] transition-opacity"
              onClick={() => setSelectedPlace(null)}
            ></div>
 
-           {/* Modal Card: Increased opacity to slate-900/60 to ensure blur renders on iOS */}
-           <div className="relative w-full max-w-md bg-slate-900/60 backdrop-blur-xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border-t sm:border border-white/20 max-h-[90vh] overflow-y-auto no-scrollbar ring-1 ring-white/10">
+           {/* Modal Card: High Opacity Glass (85%) to block background text */}
+           <div className="relative w-full max-w-md bg-slate-900/85 backdrop-blur-2xl rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border-t sm:border border-white/20 max-h-[90vh] overflow-y-auto no-scrollbar ring-1 ring-white/10">
              
              {/* Header Image */}
              <div className="relative h-72 w-full flex-shrink-0 bg-slate-900">
@@ -113,7 +113,7 @@ const Itinerary: React.FC = () => {
                  className="w-full h-full object-cover opacity-95"
                />
                {/* Gradient overlay */}
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-transparent to-transparent"></div>
                
                <button 
                   onClick={() => setSelectedPlace(null)}
