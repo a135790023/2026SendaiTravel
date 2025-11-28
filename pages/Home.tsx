@@ -82,7 +82,7 @@ const Home: React.FC<HomeProps> = ({ setTab }) => {
   }, []);
 
   // Ginzan Onsen Image URL
-  const bgImage = "https://images.pexels.com/photos/4179793/pexels-photo-4179793.jpeg";
+  const bgImage = "https://images.pexels.com/photos/5500779/pexels-photo-5500779.jpeg";
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gray-900">
