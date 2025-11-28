@@ -27,6 +27,14 @@ const IMAGES = {
   tem: "https://www.ana.co.jp/japan-travel-planner/area/tohoku/miyagi/0000016/main.jpg"
 };
 
+/**
+ * 導航修正說明：
+ * 如果 Google Maps 導航位置不準確，請修改下方各行程的 `query` 欄位。
+ * 建議填入：
+ * 1. 完整的 Google Maps 地址
+ * 2. 該地點的「日文名稱」
+ * 3. 經緯度 (例如 "38.2601,140.8824")
+ */
 export const ITINERARY: DaySchedule[] = [
   {
     date: "2026/01/02",
@@ -51,28 +59,29 @@ export const ITINERARY: DaySchedule[] = [
         time: "16:00–17:00", 
         location: "仙台機場", 
         activity: "入境、領行李 (1小時)", 
-        query: "Sendai Airport",
+        query: "Sendai Airport 仙台空港",
         image: IMAGES.airport
       },
       { 
         time: "17:40–18:10", 
         location: "仙台站", 
         activity: "移動、熟悉環境 (30分鐘)", 
-        query: "Sendai Station",
+        query: "Sendai Station 仙台駅",
         image: IMAGES.sendaiStation
       },
       { 
         time: "18:15–19:15", 
         location: "牛タン焼専門店 東口", 
         activity: "晚餐：享用仙台牛舌", 
-        query: "Sendai Station East Exit Gyutan",
+        // 建議確認訂位的餐廳名稱，這裡預設導航至東口
+        query: "Sendai Station East Exit Gyutan 仙台駅東口 牛タン",
         image: IMAGES.gyutan
       },
       { 
         time: "21:00", 
         location: "仙台東口 R&B 飯店", 
         activity: "辦理入住 (Check-in)", 
-        query: "R&B Hotel Sendai Higashiguchi",
+        query: "R&B Hotel Sendai Higashiguchi R&Bホテル仙台東口",
         image: IMAGES.hotel
       },
     ]
@@ -83,24 +92,31 @@ export const ITINERARY: DaySchedule[] = [
     title: "山寺與銀山溫泉",
     items: [
       { time: "08:00–09:00", location: "仙台東口 R&B 飯店", activity: "出發準備", query: "R&B Hotel Sendai Higashiguchi", image: IMAGES.hotel },
-      { time: "09:00–09:30", location: "Toyota Rent a Car", activity: "取車手續", query: "Toyota Rent a Car Sendai Station East", image: IMAGES.driving },
+      { time: "09:00–09:30", location: "Toyota Rent a Car", activity: "取車手續", query: "Toyota Rent a Car Sendai Station East トヨタレンタカー 仙台駅東口店", image: IMAGES.driving },
       { 
         time: "10:30–11:30", 
         location: "立石寺（山寺）", 
         activity: "參拜、登山觀景", 
-        query: "Yamadera Risshaku-ji Temple",
+        query: "Yamadera Risshaku-ji Temple 宝珠山 立石寺",
         image: IMAGES.yamadera
       },
-      { time: "12:00–14:30", location: "山寺周邊", activity: "午餐、周邊散策", query: "Yamadera Station", image: IMAGES.yamadera },
+      { time: "12:00–14:30", location: "山寺周邊", activity: "午餐、周邊散策", query: "Yamadera Station 山寺駅", image: IMAGES.yamadera },
       { 
         time: "15:20–17:50", 
         location: "銀山溫泉", 
         activity: "溫泉街觀光、拍照", 
-        query: "Ginzan Onsen",
+        query: "Ginzan Onsen 銀山温泉",
         image: IMAGES.ginzan
       },
-      { time: "18:00–19:00", location: "銀山溫泉周邊", activity: "晚餐", query: "Ginzan Onsen Restaurant", image: IMAGES.ginzan },
-      { time: "20:00", location: "一棟貸旅籠 治兵衛 JIHEI", activity: "辦理入住", query: "Hatago Jihei", image: IMAGES.ryokan },
+      { time: "18:00–19:00", location: "銀山溫泉周邊", activity: "晚餐", query: "Ginzan Onsen 銀山温泉", image: IMAGES.ginzan },
+      { 
+        time: "20:00", 
+        location: "一棟貸旅籠 治兵衛 JIHEI", 
+        activity: "辦理入住", 
+        // 請填入確切地址，以免導航到同名地點
+        query: "Hatago Jihei Obanazawa 一棟貸し旅籠 治兵衛", 
+        image: IMAGES.ryokan 
+      },
     ]
   },
   {
@@ -109,24 +125,30 @@ export const ITINERARY: DaySchedule[] = [
     title: "藏王樹冰與滑雪",
     items: [
       { time: "06:00–07:00", location: "治兵衛 JIHEI", activity: "前往藏王", isTransport: true, image: IMAGES.ryokan },
-      { time: "07:30–08:30", location: "藏王 Jupeer", activity: "租借雪裝", query: "Zao Base Center Jupeer", image: IMAGES.jupeer },
+      { 
+        time: "07:30–08:30", 
+        location: "藏王 Jupeer", 
+        activity: "租借雪裝", 
+        query: "Zao Base Center Jupeer 蔵王ベースセンタージュピア", 
+        image: IMAGES.jupeer 
+      },
       { 
         time: "08:30–12:30", 
         location: "藏王樹冰", 
         activity: "搭纜車、觀賞樹冰", 
-        query: "Zao Ropeway Sanroku Line",
+        query: "Zao Ropeway Sanroku Line 蔵王ロープウェイ 山麓線",
         image: IMAGES.snowMonsters
       },
-      { time: "12:30–14:00", location: "藏王纜車山頂站", activity: "午餐、休息", query: "Zao Ropeway Summit Station", image: IMAGES.snowMonsters },
+      { time: "12:30–14:00", location: "藏王纜車山頂站", activity: "午餐、休息", query: "Zao Ropeway Summit Station 地蔵山頂駅", image: IMAGES.snowMonsters },
       { 
         time: "14:00–19:00", 
         location: "蔵王温泉滑雪場", 
         activity: "滑雪、雪上活動", 
-        query: "Zao Onsen Ski Resort Uwanodai",
+        query: "Zao Onsen Ski Resort Uwanodai 蔵王温泉スキー場 上の台ゲレンデ",
         image: IMAGES.skiing
       },
-      { time: "19:00–20:00", location: "Jupeer", activity: "歸還雪裝", query: "Zao Base Center Jupeer", image: IMAGES.jupeer },
-      { time: "20:30", location: "治兵衛 JIHEI", activity: "返回住宿", query: "Hatago Jihei", image: IMAGES.ryokan },
+      { time: "19:00–20:00", location: "Jupeer", activity: "歸還雪裝", query: "Zao Base Center Jupeer 蔵王ベースセンタージュピア", image: IMAGES.jupeer },
+      { time: "20:30", location: "治兵衛 JIHEI", activity: "返回住宿", query: "Hatago Jihei Obanazawa 一棟貸し旅籠 治兵衛", image: IMAGES.ryokan },
     ]
   },
   {
@@ -139,12 +161,19 @@ export const ITINERARY: DaySchedule[] = [
         time: "10:30–13:30", 
         location: "福島安達屋", 
         activity: "日歸泡湯", 
-        query: "Takayu Onsen Adachiya",
+        query: "Takayu Onsen Adachiya 高湯温泉 安達屋",
         image: IMAGES.onsen
       },
-      { time: "13:30–14:30", location: "安達屋周邊", activity: "午餐", query: "Takayu Onsen", image: IMAGES.onsen },
-      { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "Sukagawa Supermarket", image: IMAGES.house },
-      { time: "16:30", location: "須賀川包棟民宿", activity: "Check-in、料理晚餐", query: "Sukagawa City Hall", image: IMAGES.house },
+      { time: "13:30–14:30", location: "安達屋周邊", activity: "午餐", query: "Takayu Onsen 高湯温泉", image: IMAGES.onsen },
+      { time: "15:30–16:30", location: "須賀川民宿附近超市", activity: "採買晚餐食材", query: "York Benimaru Sukagawa ヨークベニマル 須賀川", image: IMAGES.house },
+      { 
+        time: "16:30", 
+        location: "須賀川包棟民宿", 
+        activity: "Check-in、料理晚餐", 
+        // ⚠️ 重要：私人地址請手動修正，例如："Sukagawa City Hall" 或填入確切地址
+        query: "Sukagawa City 須賀川市", 
+        image: IMAGES.house 
+      },
     ]
   },
   {
@@ -157,25 +186,25 @@ export const ITINERARY: DaySchedule[] = [
         time: "08:30–09:30", 
         location: "第一只見川橋拍攝點", 
         activity: "絕景攝影", 
-        query: "No.1 Tadami River Bridge Viewpoint",
+        query: "No.1 Tadami River Bridge Viewpoint 第一只見川橋梁ビューポイント",
         image: IMAGES.tadami
       },
       { 
         time: "10:30–11:30", 
         location: "會津若松城", 
         activity: "登城參觀", 
-        query: "Tsuruga Castle",
+        query: "Tsuruga Castle 鶴ヶ城",
         image: IMAGES.castle
       },
-      { time: "11:30–13:00", location: "會津若松城周邊", activity: "午餐", query: "Aizuwakamatsu Castle", image: IMAGES.castle },
+      { time: "11:30–13:00", location: "會津若松城周邊", activity: "午餐", query: "Tsuruga Castle 鶴ヶ城", image: IMAGES.castle },
       { 
         time: "13:30–16:30", 
         location: "大內宿", 
         activity: "漫遊茅草屋古街", 
-        query: "Ouchi-juku",
+        query: "Ouchi-juku 大内宿",
         image: IMAGES.ouchijuku
       },
-      { time: "17:30", location: "須賀川包棟民宿", activity: "返回休息", query: "Sukagawa City", image: IMAGES.house },
+      { time: "17:30", location: "須賀川包棟民宿", activity: "返回休息", query: "Sukagawa City 須賀川市", image: IMAGES.house },
     ]
   },
   {
@@ -184,16 +213,22 @@ export const ITINERARY: DaySchedule[] = [
     title: "仙台購物與返程",
     items: [
       { time: "08:00–10:00", location: "民宿 → 宮城縣", activity: "移動", isTransport: true, image: IMAGES.sendaiStation },
-      { time: "10:00–11:00", location: "金蛇水神社", activity: "參拜財運神社", query: "Kanahebisui Shrine", image: IMAGES.tem },
+      { 
+        time: "10:00–11:00", 
+        location: "金蛇水神社", 
+        activity: "參拜財運神社", 
+        query: "Kanahebisui Shrine 金蛇水神社", 
+        image: IMAGES.tem 
+      },
       { 
         time: "11:30–14:30", 
         location: "Mitsui Outlet Park", 
         activity: "購物、午餐", 
-        query: "Mitsui Outlet Park Sendai Port",
+        query: "Mitsui Outlet Park Sendai Port 三井アウトレットパーク 仙台港",
         image: IMAGES.shopping
       },
-      { time: "15:00–15:30", location: "豐田租車 仙台機場店", activity: "還車手續", query: "Toyota Rent a Car Sendai Airport", image: IMAGES.driving },
-      { time: "15:30–17:25", location: "仙台機場", activity: "登機手續、免稅店", query: "Sendai Airport", image: IMAGES.airport },
+      { time: "15:00–15:30", location: "豐田租車 仙台機場店", activity: "還車手續", query: "Toyota Rent a Car Sendai Airport トヨタレンタカー 仙台空港店", image: IMAGES.driving },
+      { time: "15:30–17:25", location: "仙台機場", activity: "登機手續、免稅店", query: "Sendai Airport 仙台空港", image: IMAGES.airport },
       { 
         time: "17:25–20:35", 
         location: "SDJ → TPE (JX863)", 
