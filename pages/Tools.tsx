@@ -142,7 +142,7 @@ const Tools: React.FC = () => {
           <Snowflake className="absolute top-4 right-4 text-white/5 w-24 h-24 animate-spin-slow" />
           <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
              <Snowflake size={18} className="mr-2" />
-             冬季購物小貼士
+             冬季購物小提醒
           </h3>
           <ul className="space-y-3 text-sm text-gray-300 relative z-10">
             <li className="flex items-start">
@@ -155,7 +155,7 @@ const Tools: React.FC = () => {
             </li>
             <li className="flex items-start">
               <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,1)]"></span>
-              仙台車站 S-PAL 很好逛，伴手禮一站買齊。
+              大家滑雪要小心，雪場遠離蘇進吉，他撞到不負責。
             </li>
           </ul>
         </div>
