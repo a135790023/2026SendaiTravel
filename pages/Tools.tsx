@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, BellRing, Send, Radio, BellOff } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, BellRing, Send, Radio, BellOff, Terminal } from 'lucide-react';
 import { VAPID_PUBLIC_KEY } from '../constants';
 
 // --- Configuration ---
@@ -23,6 +23,18 @@ const Tools: React.FC = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
+  // System Log State
+  const [statusLogs, setStatusLogs] = useState<string[]>([
+    '你想說什麼...',
+    '蘇進吉 ＝ 兩津勘吉。'
+  ]);
+
+  // Helper to add log
+  const addLog = (msg: string) => {
+    const time = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' });
+    setStatusLogs(prev => [`[${time}] ${msg}`, ...prev]);
+  };
+
   // Fetch Live Rate on Mount
   useEffect(() => {
     fetchLiveRate();
@@ -33,7 +45,10 @@ const Tools: React.FC = () => {
     if ('serviceWorker' in navigator) {
        navigator.serviceWorker.ready.then(registration => {
          registration.pushManager.getSubscription().then(subscription => {
-           if (subscription) setIsSubscribed(true);
+           if (subscription) {
+             setIsSubscribed(true);
+             addLog('已偵測到現有訂閱。');
+           }
          });
        });
     }
@@ -110,21 +125,22 @@ const Tools: React.FC = () => {
 
   const subscribeToPush = async () => {
     if (!('serviceWorker' in navigator)) {
-      alert("此瀏覽器不支援 Service Worker，無法使用推播。");
+      addLog("錯誤：瀏覽器不支援 Service Worker。");
       return;
     }
 
     // 檢查權限
     if (Notification.permission === 'denied') {
-      alert("通知權限已被拒絕，請至瀏覽器設定開啟。");
+      addLog("錯誤：通知權限已被拒絕。");
       return;
     }
 
     setIsSubscribing(true);
+    addLog("正在請求訂閱...");
     try {
       const register = await navigator.serviceWorker.ready;
       if (!register) {
-        throw new Error("Service Worker 尚未準備好，請重新整理頁面再試。");
+        throw new Error("Service Worker 尚未準備好。");
       }
       
       // 訂閱
@@ -133,10 +149,8 @@ const Tools: React.FC = () => {
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
       });
 
-      console.log("Subscribed Object:", JSON.stringify(subscription));
-
       // 傳送給後端
-      console.log(`正在連線至後端: ${API_URL}/subscribe`);
+      addLog(`正在連線後端...`);
       const response = await fetch(`${API_URL}/subscribe`, {
         method: 'POST',
         body: JSON.stringify(subscription),
@@ -146,15 +160,15 @@ const Tools: React.FC = () => {
       });
       
       if (!response.ok) {
-        throw new Error(`後端連線失敗 (${response.status})。請確認後端是否正在執行。`);
+        throw new Error(`後端連線失敗 (${response.status})`);
       }
 
       setIsSubscribed(true);
       setPermission(Notification.permission);
-      alert("訂閱成功！\n\n如果沒有收到「歡迎通知」：\n1. 請檢查電腦/手機是否開啟「勿擾模式」。");
+      addLog("✅ 訂閱成功！");
     } catch (err: any) {
       console.error(err);
-      alert(`訂閱失敗：\n${err.message || err}`);
+      addLog(`❌ 訂閱失敗: ${err.message || err}`);
     } finally {
       setIsSubscribing(false);
     }
@@ -164,6 +178,7 @@ const Tools: React.FC = () => {
     if (!confirm('確定要取消接收通知嗎？')) return;
     
     setIsSubscribing(true);
+    addLog("正在取消訂閱...");
     try {
        if ('serviceWorker' in navigator) {
             const registration = await navigator.serviceWorker.ready;
@@ -183,21 +198,22 @@ const Tools: React.FC = () => {
                 });
 
                 setIsSubscribed(false);
-                alert('狀態已重置！現在不再接收通知。');
+                addLog("已取消訂閱，狀態重置。");
             } else {
-                alert('你目前沒有訂閱喔！');
+                addLog("目前沒有有效訂閱。");
                 setIsSubscribed(false);
             }
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('取消訂閱失敗:', error);
-        alert('重置失敗，請清除瀏覽器快取再試。');
+        addLog(`❌ 重置失敗: ${error.message}`);
     } finally {
         setIsSubscribing(false);
     }
   };
 
   const sendRemoteBroadcast = async () => {
+    addLog("正在發送廣播...");
     try {
       // Changed: Use 'message' key instead of 'body' to avoid confusion
       const payload = {
@@ -206,8 +222,6 @@ const Tools: React.FC = () => {
         url: window.location.href
       };
       
-      console.log("Sending payload:", payload);
-
       const response = await fetch(`${API_URL}/broadcast`, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -218,10 +232,10 @@ const Tools: React.FC = () => {
 
       if (!response.ok) throw new Error("後端回應錯誤");
       
-      alert('已發送遠端廣播指令！\n請檢查所有訂閱的裝置是否有收到通知。');
-    } catch (err) {
+      addLog("✅ 廣播已發送！");
+    } catch (err: any) {
        console.error(err);
-       alert('發送失敗，請確認後端伺服器是否正在執行。');
+       addLog(`❌ 發送失敗: ${err.message}`);
     }
   };
 
@@ -417,6 +431,24 @@ const Tools: React.FC = () => {
                     <span className="text-xs font-bold">發送廣播</span>
                 </button>
             </div>
+            
+            {/* System Log Display */}
+            <div className="mt-4 border-t border-white/10 pt-4">
+                <div className="flex items-center mb-2 text-gray-400 text-xs font-bold uppercase tracking-wider">
+                    <Terminal size={12} className="mr-1.5" />
+                    系統日誌
+                </div>
+                <div className="bg-black/30 border border-white/5 rounded-xl p-3 h-24 overflow-y-auto font-mono text-[10px] leading-relaxed text-green-400 shadow-inner">
+                    {statusLogs.length > 0 ? (
+                        statusLogs.map((log, index) => (
+                            <div key={index} className="mb-1 border-b border-white/5 pb-1 last:border-0">{log}</div>
+                        ))
+                    ) : (
+                        <span className="text-gray-600 italic">無紀錄...</span>
+                    )}
+                </div>
+            </div>
+
             <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate">
                 Server: {API_URL.replace('https://', '')}
             </p>
