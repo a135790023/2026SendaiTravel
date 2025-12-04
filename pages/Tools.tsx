@@ -166,18 +166,27 @@ const Tools: React.FC = () => {
   };
 
   const subscribeToPush = async () => {
-    if (!('serviceWorker' in navigator)) return;
+    if (!('serviceWorker' in navigator)) {
+      alert("此瀏覽器不支援 Service Worker，無法使用推播。");
+      return;
+    }
+
     setIsSubscribing(true);
     try {
       const register = await navigator.serviceWorker.ready;
+      if (!register) {
+        throw new Error("Service Worker 尚未準備好，請重新整理頁面再試。");
+      }
       
       const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
       });
 
+      console.log("Subscription Object:", JSON.stringify(subscription));
+
       // Send to Backend
-      await fetch(`${API_URL}/subscribe`, {
+      const response = await fetch(`${API_URL}/subscribe`, {
         method: 'POST',
         body: JSON.stringify(subscription),
         headers: {
@@ -185,11 +194,15 @@ const Tools: React.FC = () => {
         }
       });
       
+      if (!response.ok) {
+        throw new Error(`後端連線失敗 (${response.status})。請確認 Server 是否開啟。`);
+      }
+
       setIsSubscribed(true);
       alert("訂閱成功！你現在可以接收推播了。");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("訂閱失敗，請檢查 VAPID Key 或後端連線 (Console)");
+      alert(`訂閱失敗：${err.message || err}`);
     } finally {
       setIsSubscribing(false);
     }

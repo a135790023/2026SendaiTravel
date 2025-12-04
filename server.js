@@ -14,14 +14,14 @@ app.use(bodyParser.json());
 // 這是與前端溝通的公鑰 (需填入 constants.ts)
 const publicVapidKey = 'BA9EFqigQF0HLsJisQtvcbWrjAvtz14BT9DKwaygnNJR51kPnY-TwH9Ui94sLEzZOS4FdOiXI-OKAUl1A2Mh-Fc'; 
 // 這是只有伺服器知道的私鑰 (絕對不能外洩)
-//const privateVapidKey = 'wpUqQhxKlvFrlNZ_2ILgVlk2NuD2Tjf7vdWGZAKN1w8';
+const privateVapidKey = 'wpUqQhxKlvFrlNZ_2ILgVlk2NuD2Tjf7vdWGZAKN1w8';
 
 // 設定 Web Push
-// webpush.setVapidDetails(
-//   'mailto:test@test.com',
-//   publicVapidKey,
-//   privateVapidKey
-// );
+webpush.setVapidDetails(
+  'mailto:test@test.com',
+  publicVapidKey,
+  privateVapidKey
+);
 
 // 暫存訂閱者 (在真實專案中應存入資料庫)
 let subscriptions = [];
