@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing, Share, Send, Radio, BellOff } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, BellRing, Send, Radio, BellOff } from 'lucide-react';
 import { VAPID_PUBLIC_KEY } from '../constants';
 
 // --- Configuration ---
@@ -96,58 +96,6 @@ const Tools: React.FC = () => {
     }
   };
 
-  // --- Notification Logic ---
-  
-  const requestNotificationPermission = async () => {
-    if (!('Notification' in window)) {
-      alert("此瀏覽器不支援通知功能");
-      return;
-    }
-    const result = await Notification.requestPermission();
-    setPermission(result);
-  };
-
-  const sendLocalTest = () => {
-    if (Notification.permission === 'granted') {
-      setTimeout(() => {
-        if (navigator.serviceWorker && navigator.serviceWorker.ready) {
-           navigator.serviceWorker.ready.then(registration => {
-              registration.showNotification(notifTitle, {
-                 body: notifBody,
-                 icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png',
-                 vibrate: [200, 100, 200]
-              } as any);
-           });
-        } else {
-           new Notification(notifTitle, {
-              body: notifBody,
-              icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png'
-           });
-        }
-      }, 3000); // Delay 3s to allow user to lock screen
-      alert("通知將在 3 秒後發送\n請試著關閉螢幕或跳出 App");
-    } else {
-      requestNotificationPermission();
-    }
-  };
-
-  const broadcastToGroup = async () => {
-    const text = `【${notifTitle}】\n${notifBody}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Sendai Trip 通知',
-          text: text,
-        });
-      } catch (err) {
-        console.log("分享取消");
-      }
-    } else {
-      navigator.clipboard.writeText(text);
-      alert("已複製訊息到剪貼簿，請手動貼上至群組");
-    }
-  };
-
   // --- Remote Push Logic (Requires Backend) ---
   const urlBase64ToUint8Array = (base64String: string) => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -202,6 +150,7 @@ const Tools: React.FC = () => {
       }
 
       setIsSubscribed(true);
+      setPermission(Notification.permission);
       alert("訂閱成功！\n\n如果沒有收到「歡迎通知」：\n1. 請檢查電腦/手機是否開啟「勿擾模式」。");
     } catch (err: any) {
       console.error(err);
@@ -250,13 +199,17 @@ const Tools: React.FC = () => {
 
   const sendRemoteBroadcast = async () => {
     try {
+      const payload = {
+        title: notifTitle || '測試推播',
+        body: notifBody || '這是從前端呼叫後端發送的測試訊息！',
+        url: window.location.href
+      };
+      
+      console.log("Sending payload:", payload);
+
       const response = await fetch(`${API_URL}/broadcast`, {
         method: 'POST',
-        body: JSON.stringify({
-          title: notifTitle || '測試推播',
-          body: notifBody || '這是從前端呼叫後端發送的測試訊息！',
-          url: window.location.href
-        }),
+        body: JSON.stringify(payload),
         headers: {
           'content-type': 'application/json'
         }
@@ -408,10 +361,10 @@ const Tools: React.FC = () => {
            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center text-blue-300">
                  <BellRing className="mr-3" size={20} />
-                 <h3 className="font-bold text-white">通訊與推播中心</h3>
+                 <h3 className="font-bold text-white">推播廣播中心</h3>
               </div>
               <div className={`text-[10px] px-2 py-1 rounded-full border ${permission === 'granted' ? 'border-green-500/50 text-green-400 bg-green-500/10' : 'border-gray-500/50 text-gray-400'}`}>
-                 {permission === 'granted' ? '通知權限 OK' : '未開啟權限'}
+                 {permission === 'granted' ? '推播已就緒' : '未開啟權限'}
               </div>
            </div>
            
@@ -433,64 +386,39 @@ const Tools: React.FC = () => {
 
              {/* Action Grid */}
              <div className="grid grid-cols-2 gap-3 pt-2">
-               {/* 1. Share/Broadcast */}
-               <button 
-                 onClick={broadcastToGroup}
-                 className="flex items-center justify-center space-x-2 bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-500/30 py-3 rounded-xl transition-all active:scale-95"
-               >
-                 <Share size={16} />
-                 <span className="text-xs font-bold">群組廣播 (LINE)</span>
-               </button>
+                {/* 1. Subscribe / Unsubscribe */}
+                {isSubscribed ? (
+                  <button 
+                      onClick={unsubscribeFromPush}
+                      disabled={isSubscribing}
+                      className="flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                  >
+                      {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <BellOff size={14} />}
+                      <span className="text-xs font-bold">取消訂閱</span>
+                  </button>
+                ) : (
+                  <button 
+                      onClick={subscribeToPush}
+                      disabled={isSubscribing}
+                      className="flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50"
+                  >
+                      {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <Radio size={14} />}
+                      <span className="text-xs font-bold">開啟通知</span>
+                  </button>
+                )}
 
-               {/* 2. Local Test */}
-               <button 
-                 onClick={sendLocalTest}
-                 className="flex items-center justify-center space-x-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 py-3 rounded-xl transition-all active:scale-95"
-               >
-                 <Bell size={16} />
-                 <span className="text-xs font-bold">本地預覽 (3秒)</span>
-               </button>
-             </div>
-             
-             {/* Divider for Remote Push */}
-             <div className="border-t border-white/10 my-3 pt-3">
-                <p className="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest text-center">Remote Push (Server)</p>
-                <div className="grid grid-cols-2 gap-3">
-                    {/* 3. Subscribe / Unsubscribe */}
-                    {isSubscribed ? (
-                      <button 
-                          onClick={unsubscribeFromPush}
-                          disabled={isSubscribing}
-                          className="flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
-                      >
-                          {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <BellOff size={14} />}
-                          <span className="text-xs font-bold">取消/重置訂閱</span>
-                      </button>
-                    ) : (
-                      <button 
-                          onClick={subscribeToPush}
-                          disabled={isSubscribing}
-                          className="flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50"
-                      >
-                          {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <Radio size={14} />}
-                          <span className="text-xs font-bold">1. 點我訂閱通知</span>
-                      </button>
-                    )}
-
-                    {/* 4. Remote Broadcast */}
-                    <button 
-                        onClick={sendRemoteBroadcast}
-                        className="flex items-center justify-center space-x-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 py-3 rounded-xl transition-all active:scale-95"
-                    >
-                        <Send size={14} />
-                        <span className="text-xs font-bold">2. 發送廣播 (給所有人)</span>
-                    </button>
-                </div>
-                <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate">
-                   後端: {API_URL}
-                </p>
-             </div>
-
+                {/* 2. Remote Broadcast */}
+                <button 
+                    onClick={sendRemoteBroadcast}
+                    className="flex items-center justify-center space-x-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 py-3 rounded-xl transition-all active:scale-95"
+                >
+                    <Send size={14} />
+                    <span className="text-xs font-bold">發送廣播</span>
+                </button>
+            </div>
+            <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate">
+                Server: {API_URL.replace('https://', '')}
+            </p>
            </div>
         </div>
 

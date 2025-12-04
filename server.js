@@ -37,7 +37,7 @@ app.post('/subscribe', (req, res) => {
   res.status(201).json({});
   
   // 立即發送一個歡迎通知
-  const payload = JSON.stringify({ title: 'Sendai Trip', body: '推播訂閱成功！' });
+  const payload = JSON.stringify({ title: 'Sendai Trip', body: '推播訂閱成功！歡迎使用推播服務。' });
   webpush.sendNotification(subscription, payload).catch(error => {
     console.error(error.stack);
   });
@@ -54,8 +54,16 @@ app.post('/unsubscribe', (req, res) => {
 
 // 3. 廣播端點 (發送給所有人)
 app.post('/broadcast', (req, res) => {
+  // Explicitly destructure body to ensure it's captured
   const { title, body, url } = req.body;
-  const payload = JSON.stringify({ title, body, url, icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png' });
+  
+  // Construct payload clearly
+  const payload = JSON.stringify({ 
+    title: title || '新通知', 
+    body: body || '無內容', // Fallback
+    url: url, 
+    icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png' 
+  });
 
   Promise.all(subscriptions.map(sub => {
     webpush.sendNotification(sub, payload).catch(err => {

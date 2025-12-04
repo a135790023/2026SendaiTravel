@@ -17,12 +17,21 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('push', e => {
   console.log('Push Recieved...', e);
   
-  let data = { title: 'New Notification', body: 'No content', icon: null, url: '/' };
+  // Default values
+  let data = { title: 'New Notification', body: '無內容', icon: null, url: '/' };
   
   if (e.data) {
     try {
-      data = e.data.json();
+      // Robust Parsing
+      const json = e.data.json();
+      data = {
+        title: json.title || data.title,
+        body: json.body || data.body, // Ensure we check for body in the parsed JSON
+        icon: json.icon || data.icon,
+        url: json.url || data.url
+      };
     } catch (err) {
+      console.log('Push data is not JSON, using text.');
       data.body = e.data.text();
     }
   }
@@ -31,7 +40,7 @@ self.addEventListener('push', e => {
     self.registration.showNotification(data.title, {
       body: data.body,
       icon: data.icon || 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Fallback icon
-      data: { url: data.url || '/' }, // Encapsulate URL in data object
+      data: { url: data.url }, // Encapsulate URL in data object
       vibrate: [200, 100, 200]
     })
   );
