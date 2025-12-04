@@ -2,7 +2,7 @@
   "id": "sendai-trip-2026",
   "name": "艾迪王｜Sendai Trip",
   "short_name": "艾迪王仙台遊",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
