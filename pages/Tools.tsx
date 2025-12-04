@@ -6,7 +6,7 @@ import { VAPID_PUBLIC_KEY } from '../constants';
 // --- Configuration ---
 // ⚠️ 本地測試請使用 localhost:5000，並確認您有在終端機執行 `node server.js`
 // 若已部署後端到 Render/Heroku，請換成該網址
-const API_URL = 'https://my-push-server-mwat.onrender.com/'; 
+const API_URL = 'https://my-push-server-mwat.onrender.com'; 
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
