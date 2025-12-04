@@ -4,9 +4,9 @@ import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing
 import { VAPID_PUBLIC_KEY } from '../constants';
 
 // --- Configuration ---
-// If you have a real backend, replace this URL.
-// For local testing, it is usually http://localhost:5000
-const API_URL = 'https://2026-sendai-travel.vercel.app/'; 
+// ⚠️ 本地測試請使用 localhost:5000，並確認您有在終端機執行 `node server.js`
+// 若已部署後端到 Render/Heroku，請換成該網址
+const API_URL = 'http://localhost:5000'; 
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
@@ -48,12 +48,9 @@ const Tools: React.FC = () => {
       const data = await response.json();
       const marketRate = data.rates.TWD;
       
-      // Market rate usually differs slightly from Bank selling rate. 
-      // We use it as a good baseline.
       if (marketRate) {
         setRate(marketRate);
         localStorage.setItem('sendai_exchange_rate', marketRate.toString());
-        // Recalculate if values exist
         if (jpy) {
            setTwd((parseFloat(jpy) * marketRate).toFixed(0));
         }
@@ -147,7 +144,6 @@ const Tools: React.FC = () => {
         console.log("分享取消");
       }
     } else {
-      // Fallback: Copy to clipboard
       navigator.clipboard.writeText(text);
       alert("已複製訊息到剪貼簿，請手動貼上至群組");
     }
@@ -171,6 +167,12 @@ const Tools: React.FC = () => {
       return;
     }
 
+    // 檢查權限
+    if (Notification.permission === 'denied') {
+      alert("通知權限已被拒絕，請至瀏覽器設定開啟。");
+      return;
+    }
+
     setIsSubscribing(true);
     try {
       const register = await navigator.serviceWorker.ready;
@@ -178,14 +180,16 @@ const Tools: React.FC = () => {
         throw new Error("Service Worker 尚未準備好，請重新整理頁面再試。");
       }
       
+      // 訂閱
       const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
       });
 
-      console.log("Subscription Object:", JSON.stringify(subscription));
+      console.log("Subscribed Object:", JSON.stringify(subscription));
 
-      // Send to Backend
+      // 傳送給後端
+      console.log(`正在連線至後端: ${API_URL}/subscribe`);
       const response = await fetch(`${API_URL}/subscribe`, {
         method: 'POST',
         body: JSON.stringify(subscription),
@@ -195,14 +199,14 @@ const Tools: React.FC = () => {
       });
       
       if (!response.ok) {
-        throw new Error(`後端連線失敗 (${response.status})。請確認 Server 是否開啟。`);
+        throw new Error(`後端連線失敗 (${response.status})。請確認您已執行 'node server.js' 並且網址正確。`);
       }
 
       setIsSubscribed(true);
-      alert("訂閱成功！你現在可以接收推播了。");
+      alert("訂閱成功！\n\n如果沒有收到「歡迎通知」：\n1. 請檢查電腦/手機是否開啟「勿擾模式」。\n2. 請檢查 server.js 終端機是否有錯誤訊息。");
     } catch (err: any) {
       console.error(err);
-      alert(`訂閱失敗：${err.message || err}`);
+      alert(`訂閱失敗：\n${err.message || err}`);
     } finally {
       setIsSubscribing(false);
     }
@@ -210,7 +214,7 @@ const Tools: React.FC = () => {
 
   const sendRemoteBroadcast = async () => {
     try {
-      await fetch(`${API_URL}/broadcast`, {
+      const response = await fetch(`${API_URL}/broadcast`, {
         method: 'POST',
         body: JSON.stringify({
           title: notifTitle || '測試推播',
@@ -221,10 +225,13 @@ const Tools: React.FC = () => {
           'content-type': 'application/json'
         }
       });
-      alert('已發送遠端廣播指令！請查看你的通知。');
+
+      if (!response.ok) throw new Error("後端回應錯誤");
+      
+      alert('已發送遠端廣播指令！\n請檢查所有訂閱的裝置是否有收到通知。');
     } catch (err) {
        console.error(err);
-       alert('發送失敗，請確認後端伺服器是否開啟');
+       alert('發送失敗，請確認後端伺服器 (node server.js) 是否正在執行。');
     }
   };
 

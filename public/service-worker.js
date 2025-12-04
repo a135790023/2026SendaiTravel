@@ -1,37 +1,59 @@
+
 // public/service-worker.js
 
 console.log('Service Worker Loaded...');
 
-// 1. 監聽推播事件 (當伺服器發送訊息時觸發)
-self.addEventListener('push', e => {
-  const data = e.data.json();
-  console.log('Push Recieved...');
-
-  // 設定通知的外觀
-  self.registration.showNotification(data.title, {
-    body: data.body,
-    icon: data.icon || '/icon.png', // 你可以換成你的 logo 路徑
-    data: data.data // 這裡包含點擊後要跳轉的網址
-  });
+// 1. Install Event - Skip waiting to activate immediately
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
 });
 
-// 2. 監聽點擊事件 (當使用者點擊通知時觸發)
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close(); // 關閉通知
+// 2. Activate Event - Claim clients immediately
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
 
-  // 取得後端傳來的網址，如果沒有就回到首頁
-  const targetUrl = event.notification.data.url || '/';
+// 3. Push Event
+self.addEventListener('push', e => {
+  console.log('Push Recieved...', e);
+  
+  let data = { title: 'New Notification', body: 'No content', icon: null, url: '/' };
+  
+  if (e.data) {
+    try {
+      data = e.data.json();
+    } catch (err) {
+      data.body = e.data.text();
+    }
+  }
+
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: data.icon || 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Fallback icon
+      data: { url: data.url || '/' }, // Encapsulate URL in data object
+      vibrate: [200, 100, 200]
+    })
+  );
+});
+
+// 4. Notification Click Event
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+
+  // Handle URL navigation
+  const targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window' }).then(windowClients => {
-      // 如果已經有開著的視窗，就切換過去
-      for (var i = 0; i < windowClients.length; i++) {
-        var client = windowClients[i];
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      // Check if window is already open
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
         if (client.url === targetUrl && 'focus' in client) {
           return client.focus();
         }
       }
-      // 如果沒有，就開新視窗
+      // Open new window
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -5,9 +6,10 @@ import App from './App';
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
+    // Use absolute path to ensure it loads from public root
+    navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
-        console.log('SW registered: ', registration);
+        console.log('SW registered with scope: ', registration.scope);
       })
       .catch((registrationError) => {
         console.log('SW registration failed: ', registrationError);
