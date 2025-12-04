@@ -26,7 +26,7 @@ self.addEventListener('push', e => {
       const json = e.data.json();
       data = {
         title: json.title || data.title,
-        body: json.body || data.body, // Ensure we check for body in the parsed JSON
+        body: json.body || data.body,
         icon: json.icon || data.icon,
         url: json.url || data.url
       };
@@ -41,9 +41,12 @@ self.addEventListener('push', e => {
   e.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: data.icon || 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Fallback icon
-      data: { url: data.url }, // Encapsulate URL in data object
-      vibrate: [200, 100, 200]
+      icon: data.icon || 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Large icon
+      badge: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Small icon for Android status bar
+      data: { url: data.url },
+      vibrate: [200, 100, 200],
+      tag: 'sendai-notification', // Groups notifications
+      renotify: true
     })
   );
 });
