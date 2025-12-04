@@ -31,6 +31,19 @@ let messageHistory = [
   { title: '系統公告', message: '歡迎來到仙台之旅留言板！', time: '00:00' }
 ];
 
+// 輔助函式：取得台灣時間字串 (HH:mm)
+function getTaiwanTime() {
+  const now = new Date();
+  // 取得 UTC 時間 (毫秒)
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  // 加 8 小時 (台灣是 UTC+8)
+  const taiwanTime = new Date(utc + (3600000 * 8));
+  // 格式化為 HH:mm (使用 getHours/getMinutes 避免再次被時區轉換)
+  const hours = taiwanTime.getHours().toString().padStart(2, '0');
+  const minutes = taiwanTime.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
 // 1. 訂閱端點
 app.post('/subscribe', (req, res) => {
   const subscription = req.body;
@@ -67,9 +80,7 @@ app.post('/broadcast', (req, res) => {
   const { title, message, url } = req.body;
   
   // 1. 存入歷史紀錄
-  const now = new Date();
-  // 調整為台灣時間顯示 (簡單處理，若 Server 在 UTC)
-  const timeString = now.toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute:'2-digit', timeZone: 'Asia/Taipei' });
+  const timeString = getTaiwanTime();
   
   const newMessage = {
     title: title || '新通知',
