@@ -6,7 +6,7 @@ import { VAPID_PUBLIC_KEY } from '../constants';
 // --- Configuration ---
 // If you have a real backend, replace this URL.
 // For local testing, it is usually http://localhost:5000
-const API_URL = 'http://localhost:5000'; 
+const API_URL = 'https://2026-sendai-travel.vercel.app/'; 
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
