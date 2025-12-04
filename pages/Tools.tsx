@@ -1,11 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, BellRing, Send, Radio, BellOff, Terminal } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, BellRing, Send, Radio, BellOff, MessageSquare } from 'lucide-react';
 import { VAPID_PUBLIC_KEY } from '../constants';
 
 // --- Configuration ---
 // 已更新為您的 Render 後端網址
 const API_URL = 'https://my-push-server-mwat.onrender.com'; 
+
+interface PublicMessage {
+  title: string;
+  message: string;
+  time: string;
+}
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
@@ -23,21 +29,15 @@ const Tools: React.FC = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
-  // System Log State
-  const [statusLogs, setStatusLogs] = useState<string[]>([
-    '你想說什麼...',
-    '蘇進吉 ＝ 兩津勘吉。'
-  ]);
+  // Bulletin Board State (Public Messages)
+  const [publicMessages, setPublicMessages] = useState<PublicMessage[]>([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
 
-  // Helper to add log
-  const addLog = (msg: string) => {
-    const time = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' });
-    setStatusLogs(prev => [`[${time}] ${msg}`, ...prev]);
-  };
-
-  // Fetch Live Rate on Mount
+  // Fetch Live Rate & Messages on Mount
   useEffect(() => {
     fetchLiveRate();
+    fetchMessages();
+
     if ('Notification' in window) {
       setPermission(Notification.permission);
     }
@@ -47,7 +47,6 @@ const Tools: React.FC = () => {
          registration.pushManager.getSubscription().then(subscription => {
            if (subscription) {
              setIsSubscribed(true);
-             addLog('已偵測到現有訂閱。');
            }
          });
        });
@@ -75,6 +74,21 @@ const Tools: React.FC = () => {
       if (saved) setRate(parseFloat(saved));
     } finally {
       setIsLoadingRate(false);
+    }
+  };
+
+  const fetchMessages = async () => {
+    setIsLoadingMessages(true);
+    try {
+      const response = await fetch(`${API_URL}/messages`);
+      if (response.ok) {
+        const data = await response.json();
+        setPublicMessages(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch messages", error);
+    } finally {
+      setIsLoadingMessages(false);
     }
   };
 
@@ -125,18 +139,17 @@ const Tools: React.FC = () => {
 
   const subscribeToPush = async () => {
     if (!('serviceWorker' in navigator)) {
-      addLog("錯誤：瀏覽器不支援 Service Worker。");
+      alert("錯誤：瀏覽器不支援 Service Worker。");
       return;
     }
 
     // 檢查權限
     if (Notification.permission === 'denied') {
-      addLog("錯誤：通知權限已被拒絕。");
+      alert("錯誤：通知權限已被拒絕。請至手機設定開啟。");
       return;
     }
 
     setIsSubscribing(true);
-    addLog("正在請求訂閱...");
     try {
       const register = await navigator.serviceWorker.ready;
       if (!register) {
@@ -150,7 +163,6 @@ const Tools: React.FC = () => {
       });
 
       // 傳送給後端
-      addLog(`正在連線後端...`);
       const response = await fetch(`${API_URL}/subscribe`, {
         method: 'POST',
         body: JSON.stringify(subscription),
@@ -165,10 +177,10 @@ const Tools: React.FC = () => {
 
       setIsSubscribed(true);
       setPermission(Notification.permission);
-      addLog("✅ 訂閱成功！");
+      alert("✅ 訂閱成功！現在起你可以接收團隊廣播。");
     } catch (err: any) {
       console.error(err);
-      addLog(`❌ 訂閱失敗: ${err.message || err}`);
+      alert(`❌ 訂閱失敗: ${err.message || err}`);
     } finally {
       setIsSubscribing(false);
     }
@@ -178,7 +190,6 @@ const Tools: React.FC = () => {
     if (!confirm('確定要取消接收通知嗎？')) return;
     
     setIsSubscribing(true);
-    addLog("正在取消訂閱...");
     try {
        if ('serviceWorker' in navigator) {
             const registration = await navigator.serviceWorker.ready;
@@ -198,24 +209,23 @@ const Tools: React.FC = () => {
                 });
 
                 setIsSubscribed(false);
-                addLog("已取消訂閱，狀態重置。");
+                alert("已取消訂閱，狀態重置。");
             } else {
-                addLog("目前沒有有效訂閱。");
+                alert("目前沒有有效訂閱。");
                 setIsSubscribed(false);
             }
         }
     } catch (error: any) {
         console.error('取消訂閱失敗:', error);
-        addLog(`❌ 重置失敗: ${error.message}`);
+        alert(`❌ 重置失敗: ${error.message}`);
     } finally {
         setIsSubscribing(false);
     }
   };
 
   const sendRemoteBroadcast = async () => {
-    addLog("正在發送廣播...");
     try {
-      // Changed: Use 'message' key instead of 'body' to avoid confusion
+      // Use 'message' key
       const payload = {
         title: notifTitle || '測試推播',
         message: notifBody || '這是從前端呼叫後端發送的測試訊息！',
@@ -232,10 +242,13 @@ const Tools: React.FC = () => {
 
       if (!response.ok) throw new Error("後端回應錯誤");
       
-      addLog("✅ 廣播已發送！");
+      alert("✅ 廣播已發送！");
+      // Refresh messages
+      fetchMessages();
+      setNotifBody(''); // Clear input
     } catch (err: any) {
        console.error(err);
-       addLog(`❌ 發送失敗: ${err.message}`);
+       alert(`❌ 發送失敗: ${err.message}`);
     }
   };
 
@@ -432,19 +445,31 @@ const Tools: React.FC = () => {
                 </button>
             </div>
             
-            {/* System Log Display */}
+            {/* Public Bulletin Board (Messages from Server) */}
             <div className="mt-4 border-t border-white/10 pt-4">
-                <div className="flex items-center mb-2 text-gray-400 text-xs font-bold uppercase tracking-wider">
-                    <Terminal size={12} className="mr-1.5" />
-                    系統日誌
+                <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center text-gray-400 text-xs font-bold uppercase tracking-wider">
+                        <MessageSquare size={12} className="mr-1.5" />
+                        團隊留言板 (最近 3 則)
+                    </div>
+                    <button onClick={fetchMessages} className="text-[10px] text-blue-400 hover:text-white">
+                        {isLoadingMessages ? '更新中...' : '重新整理'}
+                    </button>
                 </div>
-                <div className="bg-black/30 border border-white/5 rounded-xl p-3 h-24 overflow-y-auto font-mono text-[10px] leading-relaxed text-green-400 shadow-inner">
-                    {statusLogs.length > 0 ? (
-                        statusLogs.map((log, index) => (
-                            <div key={index} className="mb-1 border-b border-white/5 pb-1 last:border-0">{log}</div>
+                
+                <div className="bg-black/30 border border-white/5 rounded-xl p-3 min-h-[5rem] font-mono text-xs leading-relaxed shadow-inner space-y-2">
+                    {publicMessages.length > 0 ? (
+                        publicMessages.map((msg, index) => (
+                            <div key={index} className="border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                <div className="flex justify-between text-[10px] text-gray-500 mb-0.5">
+                                    <span className="font-bold text-blue-300">{msg.title}</span>
+                                    <span>{msg.time}</span>
+                                </div>
+                                <div className="text-gray-300">{msg.message}</div>
+                            </div>
                         ))
                     ) : (
-                        <span className="text-gray-600 italic">無紀錄...</span>
+                        <div className="text-gray-600 italic text-center py-2">目前沒有留言...</div>
                     )}
                 </div>
             </div>

@@ -26,6 +26,11 @@ webpush.setVapidDetails(
 // 暫存訂閱者 (在真實專案中應存入資料庫)
 let subscriptions = [];
 
+// 暫存歷史訊息 (只留最近 3 則)
+let messageHistory = [
+  { title: '系統公告', message: '歡迎來到仙台之旅留言板！', time: '00:00' }
+];
+
 // 1. 訂閱端點
 app.post('/subscribe', (req, res) => {
   const subscription = req.body;
@@ -52,18 +57,39 @@ app.post('/unsubscribe', (req, res) => {
   res.json({ success: true });
 });
 
-// 3. 廣播端點 (發送給所有人)
+// 3. 取得歷史訊息端點 (新功能)
+app.get('/messages', (req, res) => {
+  res.json(messageHistory);
+});
+
+// 4. 廣播端點 (發送給所有人並存入歷史)
 app.post('/broadcast', (req, res) => {
-  // Explicitly destructure body to ensure it's captured
-  // Change: Expect 'message' field from frontend to avoid body conflict
   const { title, message, url } = req.body;
   
-  // Construct payload clearly
+  // 1. 存入歷史紀錄
+  const now = new Date();
+  // 調整為台灣時間顯示 (簡單處理，若 Server 在 UTC)
+  const timeString = now.toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute:'2-digit', timeZone: 'Asia/Taipei' });
+  
+  const newMessage = {
+    title: title || '新通知',
+    message: message || '無內容',
+    time: timeString
+  };
+  
+  // 加入開頭
+  messageHistory.unshift(newMessage);
+  // 只保留最近 3 則
+  if (messageHistory.length > 3) {
+    messageHistory.pop();
+  }
+
+  // 2. 發送推播
   const payload = JSON.stringify({ 
     title: title || '新通知', 
     body: message || '無內容', // Map 'message' from request to 'body' for push
     url: url, 
-    icon: 'https://i.meee.com.tw/cYiweuS.jpg' // Updated Icon
+    icon: 'https://i.meee.com.tw/cYiweuS.jpg'
   });
 
   console.log("Broadcasting:", payload);
