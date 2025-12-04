@@ -55,15 +55,18 @@ app.post('/unsubscribe', (req, res) => {
 // 3. 廣播端點 (發送給所有人)
 app.post('/broadcast', (req, res) => {
   // Explicitly destructure body to ensure it's captured
-  const { title, body, url } = req.body;
+  // Change: Expect 'message' field from frontend to avoid body conflict
+  const { title, message, url } = req.body;
   
   // Construct payload clearly
   const payload = JSON.stringify({ 
     title: title || '新通知', 
-    body: body || '無內容', // Fallback
+    body: message || '無內容', // Map 'message' from request to 'body' for push
     url: url, 
     icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png' 
   });
+
+  console.log("Broadcasting:", payload);
 
   Promise.all(subscriptions.map(sub => {
     webpush.sendNotification(sub, payload).catch(err => {

@@ -199,9 +199,10 @@ const Tools: React.FC = () => {
 
   const sendRemoteBroadcast = async () => {
     try {
+      // Changed: Use 'message' key instead of 'body' to avoid confusion
       const payload = {
         title: notifTitle || '測試推播',
-        body: notifBody || '這是從前端呼叫後端發送的測試訊息！',
+        message: notifBody || '這是從前端呼叫後端發送的測試訊息！',
         url: window.location.href
       };
       

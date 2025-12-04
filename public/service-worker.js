@@ -32,7 +32,9 @@ self.addEventListener('push', e => {
       };
     } catch (err) {
       console.log('Push data is not JSON, using text.');
-      data.body = e.data.text();
+      // Fallback: use raw text if JSON fails
+      const text = e.data.text();
+      if(text) data.body = text;
     }
   }
 
