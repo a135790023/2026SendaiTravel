@@ -29,7 +29,11 @@ let subscriptions = [];
 // 1. 訂閱端點
 app.post('/subscribe', (req, res) => {
   const subscription = req.body;
-  subscriptions.push(subscription);
+  // 避免重複訂閱
+  const exists = subscriptions.find(sub => sub.endpoint === subscription.endpoint);
+  if (!exists) {
+    subscriptions.push(subscription);
+  }
   res.status(201).json({});
   
   // 立即發送一個歡迎通知
@@ -39,20 +43,34 @@ app.post('/subscribe', (req, res) => {
   });
 });
 
-// 2. 廣播端點 (發送給所有人)
+// 2. 取消訂閱端點
+app.post('/unsubscribe', (req, res) => {
+  const { endpoint } = req.body;
+  // 移除該訂閱
+  subscriptions = subscriptions.filter(sub => sub.endpoint !== endpoint);
+  console.log(`Unsubscribed: ${endpoint}`);
+  res.json({ success: true });
+});
+
+// 3. 廣播端點 (發送給所有人)
 app.post('/broadcast', (req, res) => {
-  const { title, body } = req.body;
-  const payload = JSON.stringify({ title, body });
+  const { title, body, url } = req.body;
+  const payload = JSON.stringify({ title, body, url, icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png' });
 
   Promise.all(subscriptions.map(sub => {
     webpush.sendNotification(sub, payload).catch(err => {
-      console.error("Error sending notification, probably expired", err);
-      // Remove expired subscription logic here...
+      if (err.statusCode === 410 || err.statusCode === 404) {
+        // 訂閱已過期，從列表中移除
+        console.log('Subscription expired, removing:', sub.endpoint);
+        subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
+      } else {
+        console.error("Error sending notification", err);
+      }
     });
   }))
   .then(() => res.json({ success: true }))
   .catch(err => res.status(500).json({ error: err.message }));
 });
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port}`));

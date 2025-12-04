@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing, Share, Send, Radio } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing, Share, Send, Radio, BellOff } from 'lucide-react';
 import { VAPID_PUBLIC_KEY } from '../constants';
 
 // --- Configuration ---
-// ⚠️ 本地測試請使用 localhost:5000，並確認您有在終端機執行 `node server.js`
-// 若已部署後端到 Render/Heroku，請換成該網址
+// 已更新為您的 Render 後端網址
 const API_URL = 'https://my-push-server-mwat.onrender.com'; 
 
 const Tools: React.FC = () => {
@@ -199,16 +198,53 @@ const Tools: React.FC = () => {
       });
       
       if (!response.ok) {
-        throw new Error(`後端連線失敗 (${response.status})。請確認您已執行 'node server.js' 並且網址正確。`);
+        throw new Error(`後端連線失敗 (${response.status})。請確認後端是否正在執行。`);
       }
 
       setIsSubscribed(true);
-      alert("訂閱成功！\n\n如果沒有收到「歡迎通知」：\n1. 請檢查電腦/手機是否開啟「勿擾模式」。\n2. 請檢查 server.js 終端機是否有錯誤訊息。");
+      alert("訂閱成功！\n\n如果沒有收到「歡迎通知」：\n1. 請檢查電腦/手機是否開啟「勿擾模式」。");
     } catch (err: any) {
       console.error(err);
       alert(`訂閱失敗：\n${err.message || err}`);
     } finally {
       setIsSubscribing(false);
+    }
+  };
+
+  const unsubscribeFromPush = async () => {
+    if (!confirm('確定要取消接收通知嗎？')) return;
+    
+    setIsSubscribing(true);
+    try {
+       if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.ready;
+            const subscription = await registration.pushManager.getSubscription();
+
+            if (subscription) {
+                // 1. 告訴瀏覽器：放棄這個訂閱
+                await subscription.unsubscribe();
+
+                // 2. 告訴後端：把資料刪除
+                await fetch(`${API_URL}/unsubscribe`, {
+                    method: 'POST',
+                    body: JSON.stringify({ endpoint: subscription.endpoint }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                setIsSubscribed(false);
+                alert('狀態已重置！現在不再接收通知。');
+            } else {
+                alert('你目前沒有訂閱喔！');
+                setIsSubscribed(false);
+            }
+        }
+    } catch (error) {
+        console.error('取消訂閱失敗:', error);
+        alert('重置失敗，請清除瀏覽器快取再試。');
+    } finally {
+        setIsSubscribing(false);
     }
   };
 
@@ -231,7 +267,7 @@ const Tools: React.FC = () => {
       alert('已發送遠端廣播指令！\n請檢查所有訂閱的裝置是否有收到通知。');
     } catch (err) {
        console.error(err);
-       alert('發送失敗，請確認後端伺服器 (node server.js) 是否正在執行。');
+       alert('發送失敗，請確認後端伺服器是否正在執行。');
     }
   };
 
@@ -344,7 +380,7 @@ const Tools: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Tips Card - Transparent Glass Style */}
+        {/* Quick Tips Card */}
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
           <Snowflake className="absolute top-4 right-4 text-blue-400/10 w-24 h-24 animate-spin-slow" />
           <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
@@ -418,17 +454,28 @@ const Tools: React.FC = () => {
              
              {/* Divider for Remote Push */}
              <div className="border-t border-white/10 my-3 pt-3">
-                <p className="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest text-center">Backend Required</p>
+                <p className="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest text-center">Remote Push (Server)</p>
                 <div className="grid grid-cols-2 gap-3">
-                    {/* 3. Subscribe */}
-                    <button 
-                        onClick={subscribeToPush}
-                        disabled={isSubscribed || isSubscribing}
-                        className={`flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border ${isSubscribed ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50'}`}
-                    >
-                        {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <Radio size={14} />}
-                        <span className="text-xs font-bold">{isSubscribed ? '已訂閱遠端' : '1. 點我訂閱通知'}</span>
-                    </button>
+                    {/* 3. Subscribe / Unsubscribe */}
+                    {isSubscribed ? (
+                      <button 
+                          onClick={unsubscribeFromPush}
+                          disabled={isSubscribing}
+                          className="flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                      >
+                          {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <BellOff size={14} />}
+                          <span className="text-xs font-bold">取消/重置訂閱</span>
+                      </button>
+                    ) : (
+                      <button 
+                          onClick={subscribeToPush}
+                          disabled={isSubscribing}
+                          className="flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50"
+                      >
+                          {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <Radio size={14} />}
+                          <span className="text-xs font-bold">1. 點我訂閱通知</span>
+                      </button>
+                    )}
 
                     {/* 4. Remote Broadcast */}
                     <button 
@@ -436,11 +483,11 @@ const Tools: React.FC = () => {
                         className="flex items-center justify-center space-x-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 py-3 rounded-xl transition-all active:scale-95"
                     >
                         <Send size={14} />
-                        <span className="text-xs font-bold">2. 發送測試廣播 (給所有人)</span>
+                        <span className="text-xs font-bold">2. 發送廣播 (給所有人)</span>
                     </button>
                 </div>
-                <p className="text-[9px] text-gray-600 text-center mt-2 font-mono">
-                   狀態: {isSubscribed ? '✅ 已連線' : '❌ 未訂閱'} | 後端: {API_URL}
+                <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate">
+                   後端: {API_URL}
                 </p>
              </div>
 
