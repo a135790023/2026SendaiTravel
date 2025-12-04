@@ -1,60 +1,40 @@
+// public/service-worker.js
 
-// Service Worker for offline support and notifications
+console.log('Service Worker Loaded...');
 
-const CACHE_NAME = 'sendai-trip-v1';
-const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json'
-];
+// 1. 監聽推播事件 (當伺服器發送訊息時觸發)
+self.addEventListener('push', e => {
+  const data = e.data.json();
+  console.log('Push Recieved...');
 
-// Install SW
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
-  );
+  // 設定通知的外觀
+  self.registration.showNotification(data.title, {
+    body: data.body,
+    icon: data.icon || '/icon.png', // 你可以換成你的 logo 路徑
+    data: data.data // 這裡包含點擊後要跳轉的網址
+  });
 });
 
-// Fetch resources
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
-});
-
-// Handle Push Notifications from Server
-self.addEventListener('push', function(event) {
-  const data = event.data ? event.data.json() : {};
-  const title = data.title || 'Sendai Trip';
-  const options = {
-    body: data.body || '新訊息通知',
-    icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png',
-    badge: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    }
-  };
-  
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
-});
-
-// Handle Notification Click
+// 2. 監聽點擊事件 (當使用者點擊通知時觸發)
 self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
+  event.notification.close(); // 關閉通知
+
+  // 取得後端傳來的網址，如果沒有就回到首頁
+  const targetUrl = event.notification.data.url || '/';
+
   event.waitUntil(
-    clients.openWindow('./')
+    clients.matchAll({ type: 'window' }).then(windowClients => {
+      // 如果已經有開著的視窗，就切換過去
+      for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // 如果沒有，就開新視窗
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
   );
 });

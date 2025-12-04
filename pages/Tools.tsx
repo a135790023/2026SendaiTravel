@@ -1,7 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing, Share, Send } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing, Share, Send, Radio } from 'lucide-react';
 import { VAPID_PUBLIC_KEY } from '../constants';
+
+// --- Configuration ---
+// If you have a real backend, replace this URL.
+// For local testing, it is usually http://localhost:5000
+const API_URL = 'http://localhost:5000'; 
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
@@ -14,6 +19,9 @@ const Tools: React.FC = () => {
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [notifTitle, setNotifTitle] = useState('集合提醒');
   const [notifBody, setNotifBody] = useState('明天早上 08:00 大廳集合！');
+  
+  // Remote Push States
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
 
   // Fetch Live Rate on Mount
@@ -21,6 +29,14 @@ const Tools: React.FC = () => {
     fetchLiveRate();
     if ('Notification' in window) {
       setPermission(Notification.permission);
+    }
+    // Check if already subscribed to service worker push
+    if ('serviceWorker' in navigator) {
+       navigator.serviceWorker.ready.then(registration => {
+         registration.pushManager.getSubscription().then(subscription => {
+           if (subscription) setIsSubscribed(true);
+         });
+       });
     }
   }, []);
 
@@ -153,7 +169,7 @@ const Tools: React.FC = () => {
     if (!('serviceWorker' in navigator)) return;
     setIsSubscribing(true);
     try {
-      const register = await navigator.serviceWorker.register('./service-worker.js');
+      const register = await navigator.serviceWorker.ready;
       
       const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
@@ -161,9 +177,7 @@ const Tools: React.FC = () => {
       });
 
       // Send to Backend
-      // 注意：這裡假設後端跑在 localhost:5000 (測試環境)
-      // 部署時請改為真實後端網址
-      await fetch('http://localhost:5000/subscribe', {
+      await fetch(`${API_URL}/subscribe`, {
         method: 'POST',
         body: JSON.stringify(subscription),
         headers: {
@@ -171,12 +185,33 @@ const Tools: React.FC = () => {
         }
       });
       
-      alert("已成功訂閱遠端推播！(需配合後端伺服器運作)");
+      setIsSubscribed(true);
+      alert("訂閱成功！你現在可以接收推播了。");
     } catch (err) {
       console.error(err);
-      alert("訂閱失敗，請檢查 VAPID Key 或網路連線");
+      alert("訂閱失敗，請檢查 VAPID Key 或後端連線 (Console)");
     } finally {
       setIsSubscribing(false);
+    }
+  };
+
+  const sendRemoteBroadcast = async () => {
+    try {
+      await fetch(`${API_URL}/broadcast`, {
+        method: 'POST',
+        body: JSON.stringify({
+          title: `[遠端] ${notifTitle}`,
+          body: notifBody,
+          url: window.location.href
+        }),
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+      alert('已發送遠端廣播指令！請檢查所有訂閱者的裝置。');
+    } catch (err) {
+       console.error(err);
+       alert('發送失敗，請確認後端伺服器是否開啟');
     }
   };
 
@@ -193,8 +228,8 @@ const Tools: React.FC = () => {
 
       <div className="p-5 space-y-6 pt-36">
         
-        {/* Currency Converter Card - Stable Smoked Glass */}
-        <div className="bg-slate-900/20 backdrop-blur-xl rounded-3xl shadow-xl border border-white/10 p-6 relative overflow-hidden group transform-gpu">
+        {/* Currency Converter Card */}
+        <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-xl border border-white/10 p-6 relative overflow-hidden group transform-gpu">
           {/* Decorative Glow */}
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-colors duration-700"></div>
           
@@ -289,7 +324,7 @@ const Tools: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Tips Card - Transparent Glass Style */}
+        {/* Quick Tips Card - Smoked Glass Style */}
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
           <Snowflake className="absolute top-4 right-4 text-blue-400/10 w-24 h-24 animate-spin-slow" />
           <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
@@ -307,20 +342,20 @@ const Tools: React.FC = () => {
             </li>
             <li className="flex items-start">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 mr-2 shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
-              大家滑雪要小心，雪場遠離蘇進吉，他撞到不負責。
+              雪場遠離蘇進吉，他撞到不負責。
             </li>
           </ul>
         </div>
         
-        {/* NEW SECTION: Communication Center (Bottom) */}
+        {/* Communication & Notification Center */}
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center text-blue-300">
                  <BellRing className="mr-3" size={20} />
-                 <h3 className="font-bold text-white">通訊與廣播中心</h3>
+                 <h3 className="font-bold text-white">通訊與推播中心</h3>
               </div>
               <div className={`text-[10px] px-2 py-1 rounded-full border ${permission === 'granted' ? 'border-green-500/50 text-green-400 bg-green-500/10' : 'border-gray-500/50 text-gray-400'}`}>
-                 {permission === 'granted' ? '通知已啟用' : '權限未開啟'}
+                 {permission === 'granted' ? '通知權限 OK' : '未開啟權限'}
               </div>
            </div>
            
@@ -340,15 +375,15 @@ const Tools: React.FC = () => {
                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-400 h-20 resize-none"
              />
 
-             {/* Action Buttons */}
+             {/* Action Grid */}
              <div className="grid grid-cols-2 gap-3 pt-2">
-               {/* 1. Broadcast (Share) */}
+               {/* 1. Share/Broadcast */}
                <button 
                  onClick={broadcastToGroup}
                  className="flex items-center justify-center space-x-2 bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-500/30 py-3 rounded-xl transition-all active:scale-95"
                >
                  <Share size={16} />
-                 <span className="text-xs font-bold">群組廣播</span>
+                 <span className="text-xs font-bold">群組廣播 (LINE)</span>
                </button>
 
                {/* 2. Local Test */}
@@ -357,19 +392,38 @@ const Tools: React.FC = () => {
                  className="flex items-center justify-center space-x-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 py-3 rounded-xl transition-all active:scale-95"
                >
                  <Bell size={16} />
-                 <span className="text-xs font-bold">本地測試 (3秒)</span>
+                 <span className="text-xs font-bold">本地預覽 (3秒)</span>
                </button>
              </div>
+             
+             {/* Divider for Remote Push */}
+             <div className="border-t border-white/10 my-3 pt-3">
+                <p className="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest text-center">Backend Required</p>
+                <div className="grid grid-cols-2 gap-3">
+                    {/* 3. Subscribe */}
+                    <button 
+                        onClick={subscribeToPush}
+                        disabled={isSubscribed || isSubscribing}
+                        className={`flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border ${isSubscribed ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50'}`}
+                    >
+                        {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <Radio size={14} />}
+                        <span className="text-xs font-bold">{isSubscribed ? '已訂閱遠端' : '訂閱遠端推播'}</span>
+                    </button>
 
-             {/* 3. Server Subscribe (Advanced) */}
-             <button 
-                onClick={subscribeToPush}
-                disabled={isSubscribing}
-                className="w-full mt-2 py-2 flex items-center justify-center space-x-2 text-xs text-gray-500 hover:text-white transition-colors border-t border-white/5 pt-4"
-             >
-                {isSubscribing ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-                <span>訂閱遠端推播伺服器 (需 Backend)</span>
-             </button>
+                    {/* 4. Remote Broadcast */}
+                    <button 
+                        onClick={sendRemoteBroadcast}
+                        className="flex items-center justify-center space-x-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 py-3 rounded-xl transition-all active:scale-95"
+                    >
+                        <Send size={14} />
+                        <span className="text-xs font-bold">發送遠端廣播</span>
+                    </button>
+                </div>
+                <p className="text-[9px] text-gray-600 text-center mt-2 font-mono">
+                    API: {API_URL}
+                </p>
+             </div>
+
            </div>
         </div>
 
