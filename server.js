@@ -63,7 +63,7 @@ app.post('/broadcast', (req, res) => {
     title: title || '新通知', 
     body: message || '無內容', // Map 'message' from request to 'body' for push
     url: url, 
-    icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png' 
+    icon: 'https://i.meee.com.tw/cYiweuS.jpg' // Updated Icon
   });
 
   console.log("Broadcasting:", payload);

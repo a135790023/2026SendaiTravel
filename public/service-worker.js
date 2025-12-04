@@ -41,8 +41,8 @@ self.addEventListener('push', e => {
   e.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: data.icon || 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Large icon
-      badge: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png', // Small icon for Android status bar
+      icon: data.icon || 'https://i.meee.com.tw/cYiweuS.jpg', // Updated Icon
+      badge: 'https://i.meee.com.tw/cYiweuS.jpg', // Updated Badge
       data: { url: data.url },
       vibrate: [200, 100, 200],
       tag: 'sendai-notification', // Groups notifications
