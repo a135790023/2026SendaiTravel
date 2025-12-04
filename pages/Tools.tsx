@@ -475,7 +475,7 @@ const Tools: React.FC = () => {
             </div>
 
             <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate">
-                Server: {API_URL.replace('https://', '')}
+                Server: {API_URL.replace('https://my-push-server-mwat.onrender.com', '')}
             </p>
            </div>
         </div>
