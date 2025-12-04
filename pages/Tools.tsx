@@ -200,15 +200,15 @@ const Tools: React.FC = () => {
       await fetch(`${API_URL}/broadcast`, {
         method: 'POST',
         body: JSON.stringify({
-          title: `[遠端] ${notifTitle}`,
-          body: notifBody,
+          title: notifTitle || '測試推播',
+          body: notifBody || '這是從前端呼叫後端發送的測試訊息！',
           url: window.location.href
         }),
         headers: {
           'content-type': 'application/json'
         }
       });
-      alert('已發送遠端廣播指令！請檢查所有訂閱者的裝置。');
+      alert('已發送遠端廣播指令！請查看你的通知。');
     } catch (err) {
        console.error(err);
        alert('發送失敗，請確認後端伺服器是否開啟');
@@ -324,7 +324,7 @@ const Tools: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Tips Card - Smoked Glass Style */}
+        {/* Quick Tips Card - Transparent Glass Style */}
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
           <Snowflake className="absolute top-4 right-4 text-blue-400/10 w-24 h-24 animate-spin-slow" />
           <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
@@ -407,7 +407,7 @@ const Tools: React.FC = () => {
                         className={`flex items-center justify-center space-x-2 py-3 rounded-xl transition-all active:scale-95 border ${isSubscribed ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50'}`}
                     >
                         {isSubscribing ? <Loader2 size={14} className="animate-spin" /> : <Radio size={14} />}
-                        <span className="text-xs font-bold">{isSubscribed ? '已訂閱遠端' : '訂閱遠端推播'}</span>
+                        <span className="text-xs font-bold">{isSubscribed ? '已訂閱遠端' : '1. 點我訂閱通知'}</span>
                     </button>
 
                     {/* 4. Remote Broadcast */}
@@ -416,11 +416,11 @@ const Tools: React.FC = () => {
                         className="flex items-center justify-center space-x-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30 py-3 rounded-xl transition-all active:scale-95"
                     >
                         <Send size={14} />
-                        <span className="text-xs font-bold">發送遠端廣播</span>
+                        <span className="text-xs font-bold">2. 發送測試廣播 (給所有人)</span>
                     </button>
                 </div>
                 <p className="text-[9px] text-gray-600 text-center mt-2 font-mono">
-                    API: {API_URL}
+                   狀態: {isSubscribed ? '✅ 已連線' : '❌ 未訂閱'} | 後端: {API_URL}
                 </p>
              </div>
 
