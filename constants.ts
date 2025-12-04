@@ -4,7 +4,7 @@ import { DaySchedule, PackingItem } from './types';
 export const TRIP_START_DATE = "2026-01-02T00:00:00+09:00"; // JST
 
 // VAPID Public Key for Web Push (需與後端 server.js 一致)
-export const VAPID_PUBLIC_KEY = 'BPhzHj_qD8wT5yXq-qD8wT5yXq-qD8wT5yXq-qD8wT5yXq'; 
+export const VAPID_PUBLIC_KEY = 'BA9EFqigQF0HLsJisQtvcbWrjAvtz14BT9DKwaygnNJR51kPnY-TwH9Ui94sLEzZOS4FdOiXI-OKAUl1A2Mh-Fc'; 
 
 // Reliable Unsplash URLs
 const IMAGES = {

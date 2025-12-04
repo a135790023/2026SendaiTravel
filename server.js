@@ -12,9 +12,9 @@ app.use(bodyParser.json());
 
 // VAPID Keys - 您可以在終端機執行 `npx web-push generate-vapid-keys` 產生新的金鑰並替換這裡
 // 這是與前端溝通的公鑰 (需填入 constants.ts)
-const publicVapidKey = 'BPhzHj_qD8wT5yXq-qD8wT5yXq-qD8wT5yXq-qD8wT5yXq'; 
+const publicVapidKey = 'BA9EFqigQF0HLsJisQtvcbWrjAvtz14BT9DKwaygnNJR51kPnY-TwH9Ui94sLEzZOS4FdOiXI-OKAUl1A2Mh-Fc'; 
 // 這是只有伺服器知道的私鑰 (絕對不能外洩)
-const privateVapidKey = 'YOUR_PRIVATE_VAPID_KEY_HERE';
+const privateVapidKey = 'wpUqQhxKlvFrlNZ_2ILgVlk2NuD2Tjf7vdWGZAKN1w8';
 
 // 設定 Web Push
 // webpush.setVapidDetails(
