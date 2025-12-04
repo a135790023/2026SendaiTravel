@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2 } from 'lucide-react';
+import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, Bell, BellRing, Share, Send } from 'lucide-react';
+import { VAPID_PUBLIC_KEY } from '../constants';
 
 const Tools: React.FC = () => {
   const [jpy, setJpy] = useState<string>('');
@@ -8,10 +9,19 @@ const Tools: React.FC = () => {
   const [rate, setRate] = useState<number>(0.215); // Default fallback
   const [isLoadingRate, setIsLoadingRate] = useState(false);
   const [lastEdited, setLastEdited] = useState<'jpy' | 'twd'>('jpy');
+  
+  // Notification States
+  const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [notifTitle, setNotifTitle] = useState('集合提醒');
+  const [notifBody, setNotifBody] = useState('明天早上 08:00 大廳集合！');
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   // Fetch Live Rate on Mount
   useEffect(() => {
     fetchLiveRate();
+    if ('Notification' in window) {
+      setPermission(Notification.permission);
+    }
   }, []);
 
   const fetchLiveRate = async () => {
@@ -74,10 +84,106 @@ const Tools: React.FC = () => {
     }
   };
 
+  // --- Notification Logic ---
+  
+  const requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+      alert("此瀏覽器不支援通知功能");
+      return;
+    }
+    const result = await Notification.requestPermission();
+    setPermission(result);
+  };
+
+  const sendLocalTest = () => {
+    if (Notification.permission === 'granted') {
+      setTimeout(() => {
+        if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+           navigator.serviceWorker.ready.then(registration => {
+              registration.showNotification(notifTitle, {
+                 body: notifBody,
+                 icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png',
+                 vibrate: [200, 100, 200]
+              } as any);
+           });
+        } else {
+           new Notification(notifTitle, {
+              body: notifBody,
+              icon: 'https://cdn-icons-png.flaticon.com/512/2530/2530495.png'
+           });
+        }
+      }, 3000); // Delay 3s to allow user to lock screen
+      alert("通知將在 3 秒後發送\n請試著關閉螢幕或跳出 App");
+    } else {
+      requestNotificationPermission();
+    }
+  };
+
+  const broadcastToGroup = async () => {
+    const text = `【${notifTitle}】\n${notifBody}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Sendai Trip 通知',
+          text: text,
+        });
+      } catch (err) {
+        console.log("分享取消");
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      navigator.clipboard.writeText(text);
+      alert("已複製訊息到剪貼簿，請手動貼上至群組");
+    }
+  };
+
+  // --- Remote Push Logic (Requires Backend) ---
+  const urlBase64ToUint8Array = (base64String: string) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
+
+  const subscribeToPush = async () => {
+    if (!('serviceWorker' in navigator)) return;
+    setIsSubscribing(true);
+    try {
+      const register = await navigator.serviceWorker.register('./service-worker.js');
+      
+      const subscription = await register.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+
+      // Send to Backend
+      // 注意：這裡假設後端跑在 localhost:5000 (測試環境)
+      // 部署時請改為真實後端網址
+      await fetch('http://localhost:5000/subscribe', {
+        method: 'POST',
+        body: JSON.stringify(subscription),
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+      
+      alert("已成功訂閱遠端推播！(需配合後端伺服器運作)");
+    } catch (err) {
+      console.error(err);
+      alert("訂閱失敗，請檢查 VAPID Key 或網路連線");
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
     <div className="pb-24 animate-fade-simple min-h-full bg-transparent transform-gpu">
       {/* Header */}
-      <div className="bg-black/40 backdrop-blur-2xl border-b border-white/10 p-6 pt-12 pb-6 sticky top-0 z-20">
+      <div className="fixed top-0 left-0 right-0 z-30 bg-black/40 backdrop-blur-2xl border-b border-white/10 p-6 pt-12 pb-6">
         <div className="flex items-center justify-between mb-2">
            <h2 className="text-2xl font-bold text-white tracking-tight drop-shadow-md">實用工具</h2>
            <Calculator className="text-blue-400" />
@@ -85,7 +191,7 @@ const Tools: React.FC = () => {
         <p className="text-gray-300 text-sm">匯率換算 & 旅行小幫手</p>
       </div>
 
-      <div className="p-5 space-y-6">
+      <div className="p-5 space-y-6 pt-36">
         
         {/* Currency Converter Card - Stable Smoked Glass */}
         <div className="bg-slate-900/20 backdrop-blur-xl rounded-3xl shadow-xl border border-white/10 p-6 relative overflow-hidden group transform-gpu">
@@ -185,7 +291,6 @@ const Tools: React.FC = () => {
 
         {/* Quick Tips Card - Transparent Glass Style */}
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
-          
           <Snowflake className="absolute top-4 right-4 text-blue-400/10 w-24 h-24 animate-spin-slow" />
           <h3 className="font-bold text-lg mb-4 flex items-center relative z-10 text-blue-300">
              <Snowflake size={18} className="mr-2 text-blue-400" />
@@ -205,6 +310,67 @@ const Tools: React.FC = () => {
               大家滑雪要小心，雪場遠離蘇進吉，他撞到不負責。
             </li>
           </ul>
+        </div>
+        
+        {/* NEW SECTION: Communication Center (Bottom) */}
+        <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-3xl p-6 shadow-lg relative overflow-hidden transform-gpu">
+           <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center text-blue-300">
+                 <BellRing className="mr-3" size={20} />
+                 <h3 className="font-bold text-white">通訊與廣播中心</h3>
+              </div>
+              <div className={`text-[10px] px-2 py-1 rounded-full border ${permission === 'granted' ? 'border-green-500/50 text-green-400 bg-green-500/10' : 'border-gray-500/50 text-gray-400'}`}>
+                 {permission === 'granted' ? '通知已啟用' : '權限未開啟'}
+              </div>
+           </div>
+           
+           <div className="space-y-3">
+             {/* Inputs */}
+             <input 
+               type="text" 
+               value={notifTitle}
+               onChange={e => setNotifTitle(e.target.value)}
+               placeholder="標題 (例：集合時間)"
+               className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-400"
+             />
+             <textarea 
+               value={notifBody}
+               onChange={e => setNotifBody(e.target.value)}
+               placeholder="內容 (例：明天早上 08:00 大廳集合)"
+               className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-blue-400 h-20 resize-none"
+             />
+
+             {/* Action Buttons */}
+             <div className="grid grid-cols-2 gap-3 pt-2">
+               {/* 1. Broadcast (Share) */}
+               <button 
+                 onClick={broadcastToGroup}
+                 className="flex items-center justify-center space-x-2 bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-500/30 py-3 rounded-xl transition-all active:scale-95"
+               >
+                 <Share size={16} />
+                 <span className="text-xs font-bold">群組廣播</span>
+               </button>
+
+               {/* 2. Local Test */}
+               <button 
+                 onClick={sendLocalTest}
+                 className="flex items-center justify-center space-x-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 py-3 rounded-xl transition-all active:scale-95"
+               >
+                 <Bell size={16} />
+                 <span className="text-xs font-bold">本地測試 (3秒)</span>
+               </button>
+             </div>
+
+             {/* 3. Server Subscribe (Advanced) */}
+             <button 
+                onClick={subscribeToPush}
+                disabled={isSubscribing}
+                className="w-full mt-2 py-2 flex items-center justify-center space-x-2 text-xs text-gray-500 hover:text-white transition-colors border-t border-white/5 pt-4"
+             >
+                {isSubscribing ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                <span>訂閱遠端推播伺服器 (需 Backend)</span>
+             </button>
+           </div>
         </div>
 
       </div>

@@ -3,6 +3,9 @@ import { DaySchedule, PackingItem } from './types';
 
 export const TRIP_START_DATE = "2026-01-02T00:00:00+09:00"; // JST
 
+// VAPID Public Key for Web Push (需與後端 server.js 一致)
+export const VAPID_PUBLIC_KEY = 'BPhzHj_qD8wT5yXq-qD8wT5yXq-qD8wT5yXq-qD8wT5yXq'; 
+
 // Reliable Unsplash URLs
 const IMAGES = {
   plane: "https://icrvb3jy.xinmedia.com/solomo/article/b/5/1/b5194e1b-c5db-4b5b-964a-83a4d3b0d50e.jpeg",
