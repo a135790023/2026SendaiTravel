@@ -4,8 +4,8 @@ import { Calculator, RefreshCw, Snowflake, ExternalLink, Loader2, BellRing, Send
 import { VAPID_PUBLIC_KEY } from '../constants';
 
 // --- Configuration ---
-// 已更新為您的 Render 後端網址
-const API_URL = 'https://my-push-server-mwat.onrender.com'; 
+// 已更新為您的 Cloudflare Tunnel 網址
+const API_URL = 'https://identifies-prime-cologne-fan.trycloudflare.com'; 
 
 interface PublicMessage {
   title: string;
@@ -474,8 +474,8 @@ const Tools: React.FC = () => {
                 </div>
             </div>
 
-            <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate">
-                Server: {API_URL.replace('https://my-push-server-mwat.onrender.com', 'https://my-push-server-mwat.onrender.com')}
+            <p className="text-[9px] text-gray-600 text-center mt-2 font-mono truncate opacity-50">
+                Server: {API_URL}
             </p>
            </div>
         </div>
